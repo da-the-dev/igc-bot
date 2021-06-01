@@ -1,0 +1,1 @@
+module.exports.fetchWarzone = require('./utility/fetchWarzone')
