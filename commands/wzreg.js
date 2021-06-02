@@ -1,12 +1,12 @@
-const Discord = require('discord.js')
+const { Message, Client } = require('discord.js')
 const { db } = require('../utility')
 const { DBUser } = db
 
 module.exports =
     /**
     * @param {Array<string>} args Command argument
-    * @param {Discord.Message} msg Discord message object
-    * @param {Discord.Client} client Discord client object
+    * @param {Message} msg Discord message object
+    * @param {Client} client Discord client object
     * @description Usage: .wzreg <usertag>
     */
     async (args, msg, client) => {
