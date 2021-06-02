@@ -17,7 +17,7 @@ module.exports =
     async (args, msg, client) => {
         const user = await new DBUser(msg.guild.id, msg.author.id)
         if(!user.wz) {
-            msg.channel.send(`:warning: К участнику ${msg.author} не привязан профиль <@&${constants.roles.wz}>`)
+            msg.channel.send(`:warning: К участнику ${msg.author} не привязан профиль **Warzone**`)
             return
         }
         const link = `https://cod.tracker.gg/warzone/profile/${user.wz.platform}/${user.wz.usertag.replace('#', '%23')}/detailed`
@@ -71,29 +71,29 @@ module.exports =
                 // .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
                 msg.channel.send(embed)
 
-                const kds = [
-                    constants.roles.kd1,
-                    constants.roles.kd2,
-                    constants.roles.kd3,
-                    constants.roles.kd4
+                const wzkds = [
+                    constants.roles.wzkd1,
+                    constants.roles.wzkd2,
+                    constants.roles.wzkd3,
+                    constants.roles.wzkd4
                 ]
 
                 const numKD = Number(stats[22].children[1].textContent)
-                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.kd1)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd1)
+                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.wzkd1)) {
+                    msg.member.roles.remove(wzkds)
+                    msg.member.roles.add(constants.roles.wzkd1)
                 }
-                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.kd2)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd2)
+                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.wzkd2)) {
+                    msg.member.roles.remove(wzkds)
+                    msg.member.roles.add(constants.roles.wzkd2)
                 }
-                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.kd3)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd3)
+                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.wzkd3)) {
+                    msg.member.roles.remove(wzkds)
+                    msg.member.roles.add(constants.roles.wzkd3)
                 }
-                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.kd4)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd4)
+                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.wzkd4)) {
+                    msg.member.roles.remove(wzkds)
+                    msg.member.roles.add(constants.roles.wzkd4)
                 }
 
             })
