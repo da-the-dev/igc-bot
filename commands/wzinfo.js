@@ -4,6 +4,8 @@ const jsdom = require("jsdom")
 const { db } = require('../utility')
 const { DBUser } = db
 const constants = require('../constants.json')
+const { e } = constants
+
 
 module.exports =
     /**
@@ -15,10 +17,11 @@ module.exports =
     async (args, msg, client) => {
         const user = await new DBUser(msg.guild.id, msg.author.id)
         if(!user.wz) {
-            msg.channel.send(':no_entry_sign: Ошибка, профиль не зарегистрирован !')
+            msg.channel.send(`:warning: К участнику ${msg.author} не привязан профиль <@&${constants.roles.wz}>`)
             return
         }
-        axios.get(`https://cod.tracker.gg/warzone/profile/battlenet/${user.wz.replace('#', '%23')}/detailed`)
+        const link = `https://cod.tracker.gg/warzone/profile/${user.wz.platform}/${user.wz.usertag.replace('#', '%23')}/detailed`
+        axios.get(link)
             .then(response => {
                 const websiteString = response.data
                 const dom = new jsdom.JSDOM(websiteString)
@@ -27,6 +30,7 @@ module.exports =
 
                 // for(i = 0; i < stats.length; i++)
                 //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
+                // console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
 
                 const level = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\``
                 const prestige = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\``
@@ -36,7 +40,7 @@ module.exports =
                 const matches = `\`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\``
                 const wins = `\`${stats[16].children[1].textContent} (${stats[16].children[2].children[0].textContent})\``
                 const top5 = `\`${stats[17].children[1].textContent} (${stats[17].children[2].children[0].textContent})\``
-                // const top10 = `\`${stats[18].children[1].textContent} (${stats[18].children[2].children[0].textContent})\``
+                const top10 = `\`${stats[18].children[1].textContent} (${stats[18].children[2].children[0].textContent})\``
                 const top25 = `\`${stats[19].children[1].textContent} (${stats[19].children[2].children[0].textContent})\``
 
                 const pKills = `\`${stats[41].children[1].textContent} (${stats[41].children[2].children[0].textContent})\``
@@ -45,18 +49,18 @@ module.exports =
                 const pDeaths = `\`${stats[42].children[1].textContent} (${stats[42].children[2].children[0].textContent})\``
 
                 const embed = new MessageEmbed({
-                    "title": " Обновление статистики Warzone",
-                    "description": `[** ${user.wz}**](https://cod.tracker.gg/warzone/profile/battlenet/${user.wz.replace('#', '%23')}/detailed) | ${msg.author}`,
+                    "title": "Обновление статистики Warzone",
+                    "description": `${e.info} [** ${user.wz.usertag}**](${link}) | ${msg.author}`,
                     "color": 7807101,
                     "fields": [
                         {
                             "name": "**Батл рояль**",
-                            "value": `> Уровень: ${level}\n> Престиж: ${prestige}\n> K/D: ${kd}\n> Убийства: ${kills}\n> Смерти: ${deaths}\n> Матчей: ${matches}\n> Победы: ${wins}\n> Топ 5: ${top5}\n> Топ 10: ${'1'}\n> Топ 25: ${top25}`,
+                            "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n> ${e.match} Матчей: ${matches}\n> ${e.top1} Победы: ${wins}\n> ${e.top5} Топ 5: ${top5}\n> ${e.top10} Топ 10: ${top10}\n> ${e.top25} Топ 25: ${top25}`,
                             "inline": true
                         },
                         {
                             "name": "**Добыча**",
-                            "value": `> Убийства: ${pKills}\n> Матчей: ${pMatches}\n> K/D: ${pKD}\n> Смертей: ${pDeaths}`,
+                            "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}`,
                             "inline": true
                         }
                     ]
@@ -64,31 +68,37 @@ module.exports =
                     .setAuthor(msg.author.tag, msg.author.displayAvatarURL({ dynamic: true }))
                     .setFooter('Авторство бота snipertf2#6625', 'https://cdn.discordapp.com/avatars/315339158912761856/6dc8a2b8f4f20f84bc099e1dfda20d3f.webp')
                     .setImage('https://i.stack.imgur.com/Fzh0w.png')
-                    .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
+                // .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
                 msg.channel.send(embed)
 
-                const wzkds = [
-                    constants.roles.wzkd1,
-                    constants.roles.wzkd2,
-                    constants.roles.wzkd3
+                const kds = [
+                    constants.roles.kd1,
+                    constants.roles.kd2,
+                    constants.roles.kd3,
+                    constants.roles.kd4
                 ]
 
                 const numKD = Number(stats[22].children[1].textContent)
-                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.wzkd1)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd1)
+                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.kd1)) {
+                    msg.member.roles.remove(kds)
+                    msg.member.roles.add(constants.roles.kd1)
                 }
-                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.wzkd2)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd2)
+                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.kd2)) {
+                    msg.member.roles.remove(kds)
+                    msg.member.roles.add(constants.roles.kd2)
                 }
-                if(numKD >= 3 && !msg.member.roles.cache.get(constants.roles.wzkd3)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd3)
+                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.kd3)) {
+                    msg.member.roles.remove(kds)
+                    msg.member.roles.add(constants.roles.kd3)
+                }
+                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.kd4)) {
+                    msg.member.roles.remove(kds)
+                    msg.member.roles.add(constants.roles.kd4)
                 }
 
             })
             .catch(err => {
+                console.log(err)
                 if(err.response.status == '404')
                     msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
             })
