@@ -13,10 +13,10 @@ const platforms = 'Поддерживаемые платформы:\n\nº**Battl
  */
 module.exports.reg =
     async (msg, args, game) => {
-        const prettyName = game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ')
-        const code = game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('')
+        const prettyName = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ') : 'Warzone'
+        const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
 
-        console.log(code, constants.roles[code])
+        // console.log(prettyName, code, constants.roles[code])
 
         var linkRemainder = ''
         switch(game) {
@@ -71,4 +71,20 @@ module.exports.reg =
                 if(err.response.status == '404')
                     msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
             })
+    }
+
+/**
+ * 
+ * @param {Message} msg 
+ * @param {'warzone'|'modern-warfare'|'cold-war'} game
+ */
+module.exports.clear =
+    async (msg, game) => {
+        const prettyName = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ') : 'Warzone'
+        const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
+
+        const user = await new DBUser(msg.guild.id, msg.author.id)
+        delete user[code]
+        user.save()
+        msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно откреплен`)
     }
