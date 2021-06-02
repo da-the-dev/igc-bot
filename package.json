@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon . --delay 2",
+    "test": "nodemon test.js"
   },
   "author": "da-the-dev",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "axios": "^0.21.1",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
-    "jsdom": "^16.6.0"
+    "jsdom": "^16.6.0",
+    "mongoose": "^5.12.12"
   }
 }

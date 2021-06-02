@@ -1,7 +1,8 @@
 // Libraries
+require('dotenv').config()
 const Discord = require('discord.js')
 const fs = require('fs')
-require('dotenv').config()
+const utl = require('./utility')
 
 // Client
 const prefix = "!"
@@ -45,22 +46,34 @@ commandNames.forEach(c => {
     )
 })
 
-// General events
+process.stdin.resume();
+function exitHandler(options, exitCode) {
+    if(options.cleanup) {
+        utl.connections.closeConnections(); console.log('ded')
+    }
+    if(exitCode || exitCode === 0) console.log(exitCode);
+    if(options.exit) process.exit();
+}
+process.on('exit', exitHandler.bind(null, { cleanup: true }));
+process.on('res', exitHandler.bind(null, { cleanup: true }));
+process.on('SIGINT', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
+
+
 client.login(process.env.BOTTOKEN)
 client.once('ready', async () => {
+    await utl.connections.startconnections(3)
     console.log("[BOT] BOT is online")
 })
-
-
 client.on('message', msg => {
     // Bot commands
     if(!msg.author.bot) {
-        console.log(prefix)
         if(msg.content[0] == prefix) {
             var args = msg.content.slice(1).split(" ")
             args.forEach(a => a.trim())
             const command = args.shift()
-            console.log('here')
 
             const execCommand = client.commands.find(c => c.name == command)
             if(execCommand) execCommand.foo(args, msg, client)

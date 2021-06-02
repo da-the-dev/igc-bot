@@ -1,29 +1,35 @@
 const Discord = require('discord.js')
 const axios = require('axios').default
-const jsdom = require("jsdom");
+const jsdom = require("jsdom")
+const { db } = require('../utility')
+const { DBUser } = db
+
 
 module.exports =
     /**
     * @param {Array<string>} args Command argument
     * @param {Discord.Message} msg Discord message object
     * @param {Discord.Client} client Discord client object
-    * @description Usage: .test
+    * @description Usage: .wzupdate
     */
     async (args, msg, client) => {
-        const user = args[0]
-        if(!user) return
+        const user = await new DBUser(msg.guild.id, msg.author.id)
+        if(!user.wz) {
+            msg.channel.send(':no_entry_sign: Ошибка, профиль не зарегистрирован !')
+            return
+        }
+        axios.get(`https://cod.tracker.gg/warzone/profile/battlenet/${user.wz.replace('#', '%23')}/detailed`)
+            .then(response => {
+                const websiteString = response.data
+                const dom = new jsdom.JSDOM(websiteString)
 
-        const response = await axios.get(`https://cod.tracker.gg/warzone/profile/battlenet/${user.replace('#', '%23')}/detailed`)
-        const websiteString = response.data
-        const dom = new jsdom.JSDOM(websiteString);
+                const stats = dom.window.document.getElementsByClassName('numbers')
 
-        const stats = dom.window.document.getElementsByClassName('numbers')
+                // for(i = 0 i < stats.length i++)
+                //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
 
-        // for(i = 0; i < stats.length; i++)
-        //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
-
-        const message = `
-        Уровень: ${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent}
+                const message = `
+Уровень: ${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent}
 Престиж: ${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim()}
 K/D: ${stats[22].children[1].textContent}
 Убийства: ${stats[20].children[1].textContent}
@@ -37,5 +43,10 @@ K/D: ${stats[22].children[1].textContent}
 Победы %: ${stats[29].children[1].textContent}
         `
 
-        msg.channel.send(message)
+                msg.channel.send(message)
+            })
+            .catch(err => {
+                if(err.response.status == '404')
+                    msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+            })
     }
