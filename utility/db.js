@@ -43,7 +43,28 @@ class Connection {
             if(!guildID) reject('No guild ID [get]!')
             if(!uniqueID) reject('No unique ID [get]!')
 
-            var res = this.#connection.db('motodori').collection(guildID).findOne({ id: uniqueID })
+            var res = this.#connection.db('Imperial-Game-Club').collection(guildID).findOne({ id: uniqueID })
+
+            res ? (
+                res._id ? delete res._id : null,
+                res.id ? delete res.id : null
+            ) : res = {}
+
+            resolve(res)
+        })
+    }
+    /**
+     * Gets data from a guild by some query
+     * @param {string} guildID - Guild ID
+     * @param {string} query - CustomQuery
+     * @return {Promise<any>} Info about the key
+     */
+    qget(guildID, query) {
+        return new Promise(async (resolve, reject) => {
+            if(!guildID) reject('No guild ID [qget]!')
+            if(!query) reject('No query [qget]!')
+
+            var res = this.#connection.db('Imperial-Game-Club').collection(guildID).findOne(query)
 
             res ? (
                 res._id ? delete res._id : null,
@@ -69,11 +90,11 @@ class Connection {
             this.get(guildID, uniqueID).then(async res => {
                 const newData = { ...{ id: uniqueID }, ...data }
                 if(res) {
-                    this.#connection.db('motodori').collection(guildID).findOneAndReplace({ id: uniqueID }, newData).then(() => {
+                    this.#connection.db('Imperial-Game-Club').collection(guildID).findOneAndReplace({ id: uniqueID }, newData).then(() => {
                         resolve('OK')
                     })
                 } else {
-                    this.#connection.db('motodori').collection(guildID).insertOne(newData).then(() => {
+                    this.#connection.db('Imperial-Game-Club').collection(guildID).insertOne(newData).then(() => {
                         resolve('OK')
                     })
                 }
@@ -94,7 +115,7 @@ class Connection {
             if(!uniqueID) reject('No unique ID [update]!')
             if(!query) reject('No query to update [update]!')
 
-            this.#connection.db('motodori').collection(guildID).updateOne({ id: uniqueID }, query, { upsert: true })
+            this.#connection.db('Imperial-Game-Club').collection(guildID).updateOne({ id: uniqueID }, query, { upsert: true })
                 .then(() => resolve('OK'))
                 .catch(err => reject(err))
         })
@@ -109,7 +130,7 @@ class Connection {
      */
     getMany(guildID, query) {
         return new Promise((resolve, reject) => {
-            this.#connection.db('motodori').collection(guildID).find(query).toArray()
+            this.#connection.db('Imperial-Game-Club').collection(guildID).find(query).toArray()
                 .then(res => resolve(res))
                 .catch(err => reject(err))
         })
@@ -127,7 +148,7 @@ class Connection {
             if(!guildID) reject('No guild ID [updateMany]!')
             if(!filter) reject('No filter [updateMany]!')
             if(!update) reject('No update query [updateMany]!')
-            this.#connection.db('motodori').collection(guildID).updateMany(filter, update, { upsert: true })
+            this.#connection.db('Imperial-Game-Club').collection(guildID).updateMany(filter, update, { upsert: true })
                 .then(() => resolve('OK'))
                 .catch(err => reject(err))
         })
@@ -144,7 +165,7 @@ class Connection {
             if(!guildID) reject('No guild ID [delete]!')
             if(!uniqueID) reject('No unique ID [delete]!')
 
-            this.#connection.db('motodori').collection(guildID).deleteOne({ id: uniqueID })
+            this.#connection.db('Imperial-Game-Club').collection(guildID).deleteOne({ id: uniqueID })
                 .then(() => resolve('OK'))
                 .catch(err => reject(err))
         })
@@ -160,7 +181,7 @@ class Connection {
             if(!guildID) reject('No guild ID [deleteMany]!')
             if(!query) reject('No query [deleteMany]!')
 
-            this.#connection.db('motodori').collection(guildID).deleteMany(query)
+            this.#connection.db('Imperial-Game-Club').collection(guildID).deleteMany(query)
                 .then(() => resolve('OK'))
                 .catch(err => reject(err))
         })
@@ -172,9 +193,9 @@ class DBUser {
     /**@type {string} User's guild ID*/ #guildID
     /**@type {string} User's ID*/ #id
 
-    /**@type {string} Warzone nickname*/ wz
-    /**@type {string} Modern warfare nickname*/ mdwf
-    /**@type {string} Cold war nickname*/ cw
+    /**@type {PlatformLink} Warzone platform data*/ wz
+    /**@type {PlatformLink} Modern warfare platform data*/ mw
+    /**@type {PlatformLink} Cold war platform data*/ cw
 
     /**
     * Retrieves data about a user
@@ -191,7 +212,7 @@ class DBUser {
             const userData = await this.#connection.get(guildID, id) || {}
 
             this.wz = userData.wz
-            this.mdwf = userData.mdwf
+            this.md = userData.md
             this.cw = userData.cw
 
             resolve(this)
@@ -204,7 +225,7 @@ class DBUser {
         this.#id ? userData.id = this.#id : null
 
         this.wz ? userData.wz = this.wz : null
-        this.mdwf ? userData.mdwf = this.mdwf : null
+        this.md ? userData.md = this.md : null
         this.cw ? userData.cw = this.cw : null
 
         return userData
@@ -226,3 +247,10 @@ function getConnection() {
 module.exports.Connection = Connection
 module.exports.DBUser = DBUser
 module.exports.getConnection = getConnection
+
+/**Custom Types */
+/**
+ * @typedef PlatformLink
+ * @property {string} usertag Usertag to use
+ * @property {'battlenet'|'atvi'} platform Platform to use
+ */
