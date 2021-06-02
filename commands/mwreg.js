@@ -6,8 +6,8 @@ module.exports =
     * @param {Array<string>} args Command argument
     * @param {Message} msg Discord message object
     * @param {Client} client Discord client object
-    * @description Usage: .cwreg <usertag> <platform>
+    * @description Usage: .mwreg <usertag> <platform>
     */
     async (args, msg, client) => {
-        trackerRegister(msg, args, 'cold-war')
+        trackerRegister(msg, args, 'modern-warfare')
     }

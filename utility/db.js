@@ -212,7 +212,7 @@ class DBUser {
             const userData = await this.#connection.get(guildID, id) || {}
 
             this.wz = userData.wz
-            this.md = userData.md
+            this.mw = userData.mw
             this.cw = userData.cw
 
             resolve(this)
@@ -225,7 +225,7 @@ class DBUser {
         this.#id ? userData.id = this.#id : null
 
         this.wz ? userData.wz = this.wz : null
-        this.md ? userData.md = this.md : null
+        this.mw ? userData.mw = this.mw : null
         this.cw ? userData.cw = this.cw : null
 
         return userData
