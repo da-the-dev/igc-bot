@@ -11,7 +11,7 @@ const platforms = 'Поддерживаемые платформы:\n\nº**Battl
  * @param {string[]} args 
  * @param {'warzone'|'modern-warfare'|'cold-war'} game 
  */
-module.exports =
+module.exports.reg =
     async (msg, args, game) => {
         const prettyName = game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ')
         const code = game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('')

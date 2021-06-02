@@ -1,5 +1,5 @@
 const { Message, Client } = require('discord.js')
-const { trackerRegister } = require('../utility')
+const { tracker } = require('../utility')
 
 module.exports =
     /**
@@ -9,5 +9,5 @@ module.exports =
     * @description Usage: .mwreg <usertag> <platform>
     */
     async (args, msg, client) => {
-        trackerRegister(msg, args, 'modern-warfare')
+        tracker.reg(msg, args, 'modern-warfare')
     }
