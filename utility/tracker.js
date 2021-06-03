@@ -156,7 +156,7 @@ module.exports.presetEmbed = (msg, game, user, link) => {
             thumb = 'https://cdn.discordapp.com/attachments/849340799392153650/850064247572136028/i_1.jpeg'
             break
         case 'cold-war':
-            thumb = 'https://cdn.discordapp.com/attachments/849340799392153650/850064247572136028/i_1.jpeg'
+            thumb = 'https://cdn.discordapp.com/attachments/849340799392153650/850064247366877224/i.jpeg'
             break
     }
 
