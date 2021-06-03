@@ -6,7 +6,6 @@ const { DBUser } = db
 const constants = require('../constants.json')
 const { e } = constants
 
-
 module.exports =
     /**
     * @param {Array<string>} args Command argument
@@ -60,7 +59,6 @@ module.exports =
 
                 const embed = new MessageEmbed({
                     "title": "Обновление статистики Warzone",
-                    // Ник: @invizy | Battle.net: TheInviz#2823
 
                     "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user.wz.usertag}**](${link})`,
                     "color": 7807101,
@@ -108,6 +106,24 @@ module.exports =
                     msg.member.roles.add(constants.roles.wzkd4)
                 }
 
+                const wzks = [
+                    constants.roles.wz5000ks,
+                    constants.roles.wz10000ks,
+                    constants.roles.wz20000ks
+                ]
+                const numKills = Number(stats[20].children[1].textContent.replace(',', ''))
+                if(numKills >= 5000 && numKills < 10000 && !msg.member.roles.cache.get(constants.roles.wz5000ks)) {
+                    msg.member.roles.remove(wzks)
+                    msg.member.roles.add(constants.roles.wz5000ks)
+                }
+                if(numKills >= 10000 && numKills < 20000 && !msg.member.roles.cache.get(constants.roles.wz10000ks)) {
+                    msg.member.roles.remove(wzks)
+                    msg.member.roles.add(constants.roles.wz10000ks)
+                }
+                if(numKills >= 20000 && !msg.member.roles.cache.get(constants.roles.wz5000ks)) {
+                    msg.member.roles.remove(wzks)
+                    msg.member.roles.add(constants.roles.wz20000ks)
+                }
             })
             .catch(err => {
                 console.log(err)
