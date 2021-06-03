@@ -28,14 +28,12 @@ module.exports =
 
                 const stats = dom.window.document.getElementsByClassName('numbers')
 
-                for(i = 0; i < stats.length; i++)
-                    console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
-                console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
+                // for(i = 0; i < stats.length; i++)
+                //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
+                // console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
 
                 const level = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\``
                 const prestige = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\``
-
-
 
                 const kd = `\`${stats[22].children[1].textContent} (${stats[22].children[2].children[0].textContent})\``
                 const kills = `\`${stats[20].children[1].textContent} (${stats[20].children[2].children[0].textContent})\``
@@ -53,6 +51,8 @@ module.exports =
                 const pKD = `\`${stats[pKDPos].children[1].textContent} (${stats[pKDPos].children[2].children[0].textContent})\``
                 const pDeathsPos = tracker.finder(stats, 'Deaths')
                 const pDeaths = `\`${stats[pDeathsPos].children[1].textContent} (${stats[pDeathsPos].children[2].children[0].textContent})\``
+                const pWinsPcentPos = tracker.finder(stats, 'Win %')
+                const pWinsPcent = `\`${stats[pWinsPcentPos].children[1].textContent} (${stats[pWinsPcentPos].children[2].children[0].textContent})\``
 
                 msg.channel.send(
                     tracker.presetEmbed(msg, 'warzone', user, link)
@@ -64,7 +64,7 @@ module.exports =
                             },
                             {
                                 "name": "**Добыча**",
-                                "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}`,
+                                "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}\n> ${e.top1} Победы %: ${pWinsPcent}`,
                                 "inline": true
                             }
                         ])
