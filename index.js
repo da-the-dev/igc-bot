@@ -67,6 +67,14 @@ client.once('ready', async () => {
     await utl.connections.startconnections(3)
     console.log("[BOT] BOT is online")
 })
+// client.on('presenceUpdate', (oldPresence, newPresence) => {
+//     if(!newPresence.activities) return false;
+//     newPresence.activities.forEach(activity => {
+//         if(activity.type == "STREAMING") {
+//             console.log(`${newPresence.user.tag} is streaming at ${activity.url}.`);
+//         };
+//     });
+// })
 client.on('message', msg => {
     // Bot commands
     if(!msg.author.bot) {
@@ -75,8 +83,10 @@ client.on('message', msg => {
             args.forEach(a => a.trim())
             const command = args.shift()
 
+            console.log('test')
+
             const execCommand = client.commands.find(c => c.name == command)
-            if(execCommand) execCommand.foo(args, msg, client)
+            if(execCommand) execCommand.foo(args, msg, client); console.log('command')
         }
     }
 })

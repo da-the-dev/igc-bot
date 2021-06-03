@@ -3,7 +3,7 @@ const { db } = require('../utility')
 const { DBUser, getConnection } = db
 const axios = require('axios').default
 const constants = require('../constants.json')
-const platforms = 'Поддерживаемые платформы:\n\nº**BattleNet** *(пиши в команде `battle` в параметре платформы)*\nº**Activision** *(пиши в команде `activ` в параметре платформы)*\nº**Playstation** *(пиши в команде `pst` в параметре платформы)*\nº**Xbox** *(пиши в команде `xbox` в параметре платформы)*'
+const platforms = 'Поддерживаемые платформы:\n\nº**BattleNet** *(пиши в команде `battle` в параметре платформы)*\nº**Activision** *(пиши в команде `activ` в параметре платформы)*\nº**Playstation** *(пиши в команде `ps` в параметре платформы)*\nº**Xbox** *(пиши в команде `xbox` в параметре платформы)*'
 
 /**
  * Register user game profile in database
@@ -49,37 +49,47 @@ module.exports.reg =
         }
 
         var link = ''
+        var linkPlatform = ''
         switch(platform) {
             case 'battle':
                 link = `https://cod.tracker.gg/${game}/profile/battlenet/${usertag.replace('#', '%23')}/${linkRemainder}`
+                linkPlatform = 'battlenet'
                 break
             case 'activ':
                 link = `https://cod.tracker.gg/${game}/profile/atvi/${usertag.replace('#', '%23')}/${linkRemainder}`
+                linkPlatform = 'atvi'
                 break
-            case 'pst':
-                link = `https://cod.tracker.gg/${game}/profile/pst/${usertag.replace('#', '%23')}/${linkRemainder}`
+            case 'ps':
+                link = `https://cod.tracker.gg/${game}/profile/psn/${usertag.replace('#', '%23')}/${linkRemainder}`
+                linkPlatform = 'psn'
                 break
             case 'xbox':
                 link = `https://cod.tracker.gg/${game}/profile/xbl/${usertag.replace('#', '%23')}/${linkRemainder}`
+                linkPlatform = 'xbl'
                 break
             default:
                 msg.channel.send(':no_entry_sign: Ошибка, указана неверная платформа !\n' + platforms)
                 return
         }
 
-        axios.get(`https://cod.tracker.gg/${game}/profile/${platform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
+        console.log('here')
+        console.log(`https://cod.tracker.gg/${game}/profile/${linkPlatform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
+        axios.get(`https://cod.tracker.gg/${game}/profile/${linkPlatform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
             .then(async response => {
+                console.log('all good')
                 if(!msg.member.roles.cache.get(constants.roles[code]))
                     msg.member.roles.add(constants.roles[code])
 
                 const user = await new DBUser(msg.guild.id, msg.author.id)
-                user[code] = { usertag: usertag, platform: platform }
+                user[code] = { usertag: usertag, platform: linkPlatform }
                 await user.save()
                 msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно закреплен | ${usertag}`)
             })
             .catch(err => {
                 if(err.response.status == '404')
                     msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+                else
+                    msg.channel.send(`:no_entry_sign: Ошибка ${err.response.status}: \`${err.response.statusMessage}\`. Возможно, ошибка на стороне провайдера информации, попробуйте позже !`)
             })
     }
 
