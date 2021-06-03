@@ -48,9 +48,21 @@ module.exports =
                 const pKD = `\`${stats[43].children[1].textContent} (${stats[43].children[2].children[0].textContent})\``
                 const pDeaths = `\`${stats[42].children[1].textContent} (${stats[42].children[2].children[0].textContent})\``
 
+                var platform = ''
+                switch(user.wz.platform) {
+                    case "battlenet":
+                        platform = 'Battle.net'
+                        break
+                    case 'atvi':
+                        platform = 'Activision'
+                        break
+                }
+
                 const embed = new MessageEmbed({
                     "title": "Обновление статистики Warzone",
-                    "description": `${e.info} [** ${user.wz.usertag}**](${link}) | ${msg.author}`,
+                    // Ник: @invizy | Battle.net: TheInviz#2823
+
+                    "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user.wz.usertag}**](${link})`,
                     "color": 7807101,
                     "fields": [
                         {
@@ -68,7 +80,7 @@ module.exports =
                     .setAuthor(msg.author.tag, msg.author.displayAvatarURL({ dynamic: true }))
                     .setFooter('Авторство бота snipertf2#6625', 'https://cdn.discordapp.com/avatars/315339158912761856/6dc8a2b8f4f20f84bc099e1dfda20d3f.webp')
                     .setImage('https://i.stack.imgur.com/Fzh0w.png')
-                // .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
+                    .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
                 msg.channel.send(embed)
 
                 const wzkds = [
