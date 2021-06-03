@@ -83,10 +83,8 @@ client.on('message', msg => {
             args.forEach(a => a.trim())
             const command = args.shift()
 
-            console.log('test')
-
             const execCommand = client.commands.find(c => c.name == command)
-            if(execCommand) execCommand.foo(args, msg, client); console.log('command')
+            if(execCommand) execCommand.foo(args, msg, client)
         }
     }
 })
