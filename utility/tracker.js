@@ -18,6 +18,18 @@ const gameDecoder = game => {
     return { prettyName: prettyName, code: code }
 }
 
+module.exports.finder = (stats, name) => {
+    var counter = 1
+    const arr = Array.from(stats)
+    for(let i = 0; i < arr.length; i++) {
+        // console.log(i, arr[i].children[0].textContent, arr[i].children[0].textContent == name)
+        if(arr[i].children[0].textContent == name && counter != 2)
+            counter++
+        else if(arr[i].children[0].textContent == name && counter == 2)
+            return i
+    }
+}
+
 /**
  * Register user game profile in database
  * @param {Message} msg

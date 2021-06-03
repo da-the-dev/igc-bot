@@ -6,6 +6,7 @@ const { DBUser } = db
 const constants = require('../constants.json')
 const { e } = constants
 
+
 module.exports =
     /**
     * @param {Array<string>} args Command argument
@@ -27,12 +28,15 @@ module.exports =
 
                 const stats = dom.window.document.getElementsByClassName('numbers')
 
-                // for(i = 0; i < stats.length; i++)
-                //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
-                // console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
+                for(i = 0; i < stats.length; i++)
+                    console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
+                console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
 
                 const level = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\``
                 const prestige = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\``
+
+
+
                 const kd = `\`${stats[22].children[1].textContent} (${stats[22].children[2].children[0].textContent})\``
                 const kills = `\`${stats[20].children[1].textContent} (${stats[20].children[2].children[0].textContent})\``
                 const deaths = `\`${stats[21].children[1].textContent} (${stats[21].children[2].children[0].textContent})\``
@@ -42,10 +46,13 @@ module.exports =
                 const top10 = `\`${stats[18].children[1].textContent} (${stats[18].children[2].children[0].textContent})\``
                 const top25 = `\`${stats[19].children[1].textContent} (${stats[19].children[2].children[0].textContent})\``
 
-                const pKills = `\`${stats[41].children[1].textContent} (${stats[41].children[2].children[0].textContent})\``
+                const pKillsPos = tracker.finder(stats, 'Kills')
+                const pKills = `\`${stats[pKillsPos].children[1].textContent} (${stats[pKillsPos].children[2].children[0].textContent})\``
                 const pMatches = `\`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\``
-                const pKD = `\`${stats[43].children[1].textContent} (${stats[43].children[2].children[0].textContent})\``
-                const pDeaths = `\`${stats[42].children[1].textContent} (${stats[42].children[2].children[0].textContent})\``
+                const pKDPos = tracker.finder(stats, 'K/D Ratio')
+                const pKD = `\`${stats[pKDPos].children[1].textContent} (${stats[pKDPos].children[2].children[0].textContent})\``
+                const pDeathsPos = tracker.finder(stats, 'Deaths')
+                const pDeaths = `\`${stats[pDeathsPos].children[1].textContent} (${stats[pDeathsPos].children[2].children[0].textContent})\``
 
                 msg.channel.send(
                     tracker.presetEmbed(msg, 'warzone', user, link)
