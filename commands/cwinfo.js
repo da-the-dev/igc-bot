@@ -17,10 +17,10 @@ module.exports =
     async (args, msg, client) => {
         const user = await new DBUser(msg.guild.id, msg.author.id)
         if(!user.cw) {
-            msg.channel.send(`:warning: К участнику ${msg.author} не привязан профиль <@&${constants.roles.cw}>`)
+            msg.channel.send(`:warning: К участнику ${msg.author} не привязан профиль **Cold War**`)
             return
         }
-        const link = `https://cod.tracker.gg/cold-war/profile/${user.cw.platform}/${user.cw.usertag.replace('#', '%23')}/detailed`
+        const link = `https://cod.tracker.gg/cold-war/profile/${user.cw.platform}/${user.cw.usertag.replace('#', '%23')}/mp`
         axios.get(link)
             .then(response => {
                 const websiteString = response.data
@@ -30,38 +30,32 @@ module.exports =
 
                 // for(i = 0; i < stats.length; i++)
                 //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
-                // console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
 
                 const level = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\``
                 const prestige = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\``
-                const kd = `\`${stats[22].children[1].textContent} (${stats[22].children[2].children[0].textContent})\``
-                const kills = `\`${stats[20].children[1].textContent} (${stats[20].children[2].children[0].textContent})\``
-                const deaths = `\`${stats[21].children[1].textContent} (${stats[21].children[2].children[0].textContent})\``
-                const matches = `\`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\``
-                const wins = `\`${stats[16].children[1].textContent} (${stats[16].children[2].children[0].textContent})\``
-                const top5 = `\`${stats[17].children[1].textContent} (${stats[17].children[2].children[0].textContent})\``
-                const top10 = `\`${stats[18].children[1].textContent} (${stats[18].children[2].children[0].textContent})\``
-                const top25 = `\`${stats[19].children[1].textContent} (${stats[19].children[2].children[0].textContent})\``
+                const kd = `\`${stats[0].children[1].textContent} (${stats[0].children[2].children[0].textContent})\``
+                const wins = `\`${stats[2].children[1].textContent} (${stats[2].children[2].children[0].textContent})\``
+                const kills = `\`${stats[1].children[1].textContent} (${stats[1].children[2].children[0].textContent})\``
+                const deaths = `\`${stats[8].children[1].textContent} (${stats[8].children[2].children[0].textContent})\``
 
-                const pKills = `\`${stats[41].children[1].textContent} (${stats[41].children[2].children[0].textContent})\``
-                const pMatches = `\`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\``
-                const pKD = `\`${stats[43].children[1].textContent} (${stats[43].children[2].children[0].textContent})\``
-                const pDeaths = `\`${stats[42].children[1].textContent} (${stats[42].children[2].children[0].textContent})\``
+                var platform = ''
+                switch(user.wz.platform) {
+                    case "battlenet":
+                        platform = 'Battle.net'
+                        break
+                    case 'atvi':
+                        platform = 'Activision'
+                        break
+                }
 
                 const embed = new MessageEmbed({
-                    "title": "Обновление статистики ColdWar",
-                    "description": `${e.info} [** ${user.cw.usertag}**](${link}) | ${msg.author}`,
+                    "title": "Обновление статистики Cold War",
+                    "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user.cw.usertag}**](${link})`,
                     "color": 7807101,
                     "fields": [
                         {
-                            "name": "**Батл рояль**",
-                            "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n> ${e.match} Матчей: ${matches}\n> ${e.top1} Победы: ${wins}\n> ${e.top5} Топ 5: ${top5}\n> ${e.top10} Топ 10: ${top10}\n> ${e.top25} Топ 25: ${top25}`,
-                            "inline": true
-                        },
-                        {
-                            "name": "**Добыча**",
-                            "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}`,
-                            "inline": true
+                            "name": "**Общее**",
+                            "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.top1} Победы: ${wins}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n`
                         }
                     ]
                 })
@@ -71,29 +65,29 @@ module.exports =
                 // .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
                 msg.channel.send(embed)
 
-                const kds = [
-                    constants.roles.kd1,
-                    constants.roles.kd2,
-                    constants.roles.kd3,
-                    constants.roles.kd4
+                const cwkds = [
+                    constants.roles.cwkd1,
+                    constants.roles.cwkd2,
+                    constants.roles.cwkd3,
+                    constants.roles.cwkd4
                 ]
 
-                const numKD = Number(stats[22].children[1].textContent)
-                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.kd1)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd1)
+                const numKD = Number(stats[0].children[1].textContent)
+                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.cwkd1)) {
+                    msg.member.roles.remove(cwkds)
+                    msg.member.roles.add(constants.roles.cwkd1)
                 }
-                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.kd2)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd2)
+                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.cwkd2)) {
+                    msg.member.roles.remove(cwkds)
+                    msg.member.roles.add(constants.roles.cwkd2)
                 }
-                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.kd3)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd3)
+                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.cwkd3)) {
+                    msg.member.roles.remove(cwkds)
+                    msg.member.roles.add(constants.roles.cwkd3)
                 }
-                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.kd4)) {
-                    msg.member.roles.remove(kds)
-                    msg.member.roles.add(constants.roles.kd4)
+                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.cwkd4)) {
+                    msg.member.roles.remove(cwkds)
+                    msg.member.roles.add(constants.roles.cwkd4)
                 }
 
             })
