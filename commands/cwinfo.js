@@ -38,32 +38,17 @@ module.exports =
                 const kills = `\`${stats[1].children[1].textContent} (${stats[1].children[2].children[0].textContent})\``
                 const deaths = `\`${stats[8].children[1].textContent} (${stats[8].children[2].children[0].textContent})\``
 
-                var platform = ''
-                switch(user.wz.platform) {
-                    case "battlenet":
-                        platform = 'Battle.net'
-                        break
-                    case 'atvi':
-                        platform = 'Activision'
-                        break
-                }
-
-                const embed = new MessageEmbed({
-                    "title": "Обновление статистики Cold War",
-                    "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user.cw.usertag}**](${link})`,
-                    "color": 7807101,
-                    "fields": [
-                        {
-                            "name": "**Общее**",
-                            "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.top1} Победы: ${wins}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n`
-                        }
-                    ]
-                })
-                    .setAuthor(msg.author.tag, msg.author.displayAvatarURL({ dynamic: true }))
-                    .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', 'https://cdn.discordapp.com/attachments/849266054051528725/849339869393977344/1622394419919.jpg')
-                    .setImage('https://i.stack.imgur.com/Fzh0w.png')
-                    .setThumbnail('https://cdn.discordapp.com/attachments/849340799392153650/850064247366877224/i.jpeg')
-                msg.channel.send(embed)
+                msg.channel.send(
+                    tracker.presetEmbed(msg, 'cold-war', user, link)
+                        .addFields(
+                            [
+                                {
+                                    "name": "**Общее**",
+                                    "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.top1} Победы: ${wins}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n`
+                                }
+                            ]
+                        )
+                )
 
                 const cwkds = [
                     constants.roles.cwkd1,

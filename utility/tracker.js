@@ -1,9 +1,22 @@
-const { Message } = require('discord.js')
-const { db } = require('../utility')
+const { Message, MessageEmbed } = require('discord.js')
+const { db, tracker } = require('../utility')
 const { DBUser, getConnection } = db
 const axios = require('axios').default
 const constants = require('../constants.json')
+const { e } = constants
 const platforms = 'Поддерживаемые платформы:\n\nº**BattleNet** *(пиши в команде `battle` в параметре платформы)*\nº**Activision** *(пиши в команде `activ` в параметре платформы)*\nº**Playstation** *(пиши в команде `ps` в параметре платформы)*\nº**Xbox** *(пиши в команде `xbox` в параметре платформы)*'
+
+/**
+ * Returns game's pretty name and code
+ * @param {'warzone'|'modern-warfare'|'cold-war'} game
+ * @returns
+ */
+const gameDecoder = game => {
+    const prettyName = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ') : 'Warzone'
+    const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
+
+    return { prettyName: prettyName, code: code }
+}
 
 /**
  * Register user game profile in database
@@ -72,11 +85,8 @@ module.exports.reg =
                 return
         }
 
-        console.log('here')
-        console.log(`https://cod.tracker.gg/${game}/profile/${linkPlatform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
         axios.get(`https://cod.tracker.gg/${game}/profile/${linkPlatform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
             .then(async response => {
-                console.log('all good')
                 if(!msg.member.roles.cache.get(constants.roles[code]))
                     msg.member.roles.add(constants.roles[code])
 
@@ -108,3 +118,56 @@ module.exports.clear =
         user.save()
         msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно откреплен`)
     }
+
+/**
+ * Register user game profile in database
+ * @param {Message} msg
+ * @param {'warzone'|'modern-warfare'|'cold-war'} game
+ * @param {DBUser} user
+ * @param {string} link
+ */
+module.exports.presetEmbed = (msg, game, user, link) => {
+    const dg = gameDecoder(game)
+
+    // Selecting platform
+    var platform = ''
+    switch(user[dg.code].platform) {
+        case "battle":
+            platform = 'Battle.net'
+            break
+        case 'atvi':
+            platform = 'Activision'
+            break
+        case 'ps':
+            platform = 'PlayStation'
+            break
+        case 'xbox':
+            platform = 'Xbox'
+            break
+    }
+
+    // Selecting thumbnail
+    var thumb = ''
+    switch(game) {
+        case 'warzone':
+            thumb = 'https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138'
+            break
+        case 'modern-warfare':
+            thumb = 'https://cdn.discordapp.com/attachments/849340799392153650/850064247572136028/i_1.jpeg'
+            break
+        case 'cold-war':
+            thumb = 'https://cdn.discordapp.com/attachments/849340799392153650/850064247572136028/i_1.jpeg'
+            break
+    }
+
+    // Cooking an embed
+    return new MessageEmbed({
+        "title": `Обновление статистики ${dg.prettyName}`,
+        "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user[dg.code].usertag}**](${link})`,
+        "color": 7807101
+    })
+        .setAuthor(msg.author.tag, msg.author.displayAvatarURL({ dynamic: true }))
+        .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', msg.client.user.displayAvatarURL({ dynamic: true }))
+        .setImage('https://i.stack.imgur.com/Fzh0w.png')
+        .setThumbnail(thumb)
+}

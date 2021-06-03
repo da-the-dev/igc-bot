@@ -1,7 +1,7 @@
 const { Message, Client, MessageEmbed } = require('discord.js')
 const axios = require('axios').default
 const jsdom = require("jsdom")
-const { db } = require('../utility')
+const { db, tracker } = require('../utility')
 const { DBUser } = db
 const constants = require('../constants.json')
 const { e } = constants
@@ -47,39 +47,21 @@ module.exports =
                 const pKD = `\`${stats[43].children[1].textContent} (${stats[43].children[2].children[0].textContent})\``
                 const pDeaths = `\`${stats[42].children[1].textContent} (${stats[42].children[2].children[0].textContent})\``
 
-                var platform = ''
-                switch(user.wz.platform) {
-                    case "battlenet":
-                        platform = 'Battle.net'
-                        break
-                    case 'atvi':
-                        platform = 'Activision'
-                        break
-                }
-
-                const embed = new MessageEmbed({
-                    "title": "Обновление статистики Warzone",
-
-                    "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user.wz.usertag}**](${link})`,
-                    "color": 7807101,
-                    "fields": [
-                        {
-                            "name": "**Батл рояль**",
-                            "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n> ${e.match} Матчей: ${matches}\n> ${e.top1} Победы: ${wins}\n> ${e.top5} Топ 5: ${top5}\n> ${e.top10} Топ 10: ${top10}\n> ${e.top25} Топ 25: ${top25}`,
-                            "inline": true
-                        },
-                        {
-                            "name": "**Добыча**",
-                            "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}`,
-                            "inline": true
-                        }
-                    ]
-                })
-                    .setAuthor(msg.author.tag, msg.author.displayAvatarURL({ dynamic: true }))
-                    .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', 'https://cdn.discordapp.com/attachments/849266054051528725/849339869393977344/1622394419919.jpg')
-                    .setImage('https://i.stack.imgur.com/Fzh0w.png')
-                    .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/849584645040635914/20210602_124545.jpg?width=1138&height=1138')
-                msg.channel.send(embed)
+                msg.channel.send(
+                    tracker.presetEmbed(msg, 'warzone', user, link)
+                        .addFields([
+                            {
+                                "name": "**Батл рояль**",
+                                "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n> ${e.match} Матчей: ${matches}\n> ${e.top1} Победы: ${wins}\n> ${e.top5} Топ 5: ${top5}\n> ${e.top10} Топ 10: ${top10}\n> ${e.top25} Топ 25: ${top25}`,
+                                "inline": true
+                            },
+                            {
+                                "name": "**Добыча**",
+                                "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}`,
+                                "inline": true
+                            }
+                        ])
+                )
 
                 const wzkds = [
                     constants.roles.wzkd1,
