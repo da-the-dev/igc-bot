@@ -26,6 +26,9 @@ module.exports.reg =
             case 'modern-warfare':
                 linkRemainder = 'mp'
                 break
+            case 'cold-war':
+                linkRemainder = 'mp'
+                break
         }
 
         const usertag = args[0]
@@ -57,6 +60,7 @@ module.exports.reg =
                 msg.channel.send(':no_entry_sign: Ошибка, указана неверная платформа !\n' + platforms)
                 return
         }
+
         axios.get(`https://cod.tracker.gg/${game}/profile/${platform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
             .then(async response => {
                 if(!msg.member.roles.cache.get(constants.roles[code]))
