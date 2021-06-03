@@ -1,5 +1,5 @@
 const { Message, MessageEmbed } = require('discord.js')
-const { db, tracker } = require('../utility')
+const { db } = require('../utility')
 const { DBUser, getConnection } = db
 const axios = require('axios').default
 const constants = require('../constants.json')
