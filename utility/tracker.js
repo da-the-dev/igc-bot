@@ -3,7 +3,7 @@ const { db } = require('../utility')
 const { DBUser, getConnection } = db
 const axios = require('axios').default
 const constants = require('../constants.json')
-const platforms = 'Поддерживаемые платформы:\n\nº**BattleNet** *(пиши в команде `battlenet` в параметре платформы)*\nº**Activision** *(пиши в команде `atvi` в параметре платформы)*\nº**Playstation** *(пиши в команде `?` в параметре платформы)*\nº**Xbox** *(пиши в команде `?` в параметре платформы)*'
+const platforms = 'Поддерживаемые платформы:\n\nº**BattleNet** *(пиши в команде `battle` в параметре платформы)*\nº**Activision** *(пиши в команде `activ` в параметре платформы)*\nº**Playstation** *(пиши в команде `pst` в параметре платформы)*\nº**Xbox** *(пиши в команде `xbox` в параметре платформы)*'
 
 /**
  * Register user game profile in database
@@ -50,11 +50,17 @@ module.exports.reg =
 
         var link = ''
         switch(platform) {
-            case 'battlenet':
+            case 'battle':
                 link = `https://cod.tracker.gg/${game}/profile/battlenet/${usertag.replace('#', '%23')}/${linkRemainder}`
                 break
-            case 'atvi':
+            case 'activ':
                 link = `https://cod.tracker.gg/${game}/profile/atvi/${usertag.replace('#', '%23')}/${linkRemainder}`
+                break
+            case 'pst':
+                link = `https://cod.tracker.gg/${game}/profile/pst/${usertag.replace('#', '%23')}/${linkRemainder}`
+                break
+            case 'xbox':
+                link = `https://cod.tracker.gg/${game}/profile/xbl/${usertag.replace('#', '%23')}/${linkRemainder}`
                 break
             default:
                 msg.channel.send(':no_entry_sign: Ошибка, указана неверная платформа !\n' + platforms)
