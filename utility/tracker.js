@@ -206,9 +206,7 @@ module.exports.kdRoles = async (game, member, kd) => {
             break
     }
 
-    console.log(kdRoles)
 
-    console.log(kd)
 
     if(kd < 2 && !member.roles.cache.get(kdRoles[0])) {
         await member.roles.remove(kdRoles)
@@ -248,19 +246,13 @@ const resetRoles = async (game, member) => {
             break
     }
 
-    console.log(kdRoles)
-    console.log(constants.roles[gameDecoder(game).code])
-
     roles2remove = roles2remove.concat(kdRoles) // Remove K/D roles
     roles2remove.push(constants.roles[gameDecoder(game).code]) // Remove game role
     if(game == 'warzone') // Remove kill-related roles
         roles2remove = roles2remove.concat([constants.roles.wz5000ks, constants.roles.wz10000ks, constants.roles.wz20000ks])
 
-    console.log(roles2remove)
     // Actually remove all roles
     await member.roles.remove(roles2remove)
-
-    console.log('done')
 }
 
 
