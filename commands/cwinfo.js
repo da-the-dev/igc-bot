@@ -50,35 +50,10 @@ module.exports =
                         )
                 )
 
-                const cwkds = [
-                    constants.roles.cwkd1,
-                    constants.roles.cwkd2,
-                    constants.roles.cwkd3,
-                    constants.roles.cwkd4
-                ]
-
                 const numKD = Number(stats[0].children[1].textContent)
-                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.cwkd1)) {
-                    msg.member.roles.remove(cwkds)
-                    msg.member.roles.add(constants.roles.cwkd1)
-                }
-                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.cwkd2)) {
-                    msg.member.roles.remove(cwkds)
-                    msg.member.roles.add(constants.roles.cwkd2)
-                }
-                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.cwkd3)) {
-                    msg.member.roles.remove(cwkds)
-                    msg.member.roles.add(constants.roles.cwkd3)
-                }
-                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.cwkd4)) {
-                    msg.member.roles.remove(cwkds)
-                    msg.member.roles.add(constants.roles.cwkd4)
-                }
-
+                tracker.kdRoles('cold-war', msg.member, numKD)
             })
             .catch(err => {
-                console.log(err)
-                if(err.response.status == '404')
-                    msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+                tracker.profileErrors(err)
             })
     }

@@ -70,30 +70,8 @@ module.exports =
                         ])
                 )
 
-                const wzkds = [
-                    constants.roles.wzkd1,
-                    constants.roles.wzkd2,
-                    constants.roles.wzkd3,
-                    constants.roles.wzkd4
-                ]
-
                 const numKD = Number(stats[22].children[1].textContent)
-                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.wzkd1)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd1)
-                }
-                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.wzkd2)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd2)
-                }
-                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.wzkd3)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd3)
-                }
-                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.wzkd4)) {
-                    msg.member.roles.remove(wzkds)
-                    msg.member.roles.add(constants.roles.wzkd4)
-                }
+                tracker.kdRoles('warzone', msg.member, numKD)
 
                 const wzks = [
                     constants.roles.wz5000ks,
@@ -115,8 +93,6 @@ module.exports =
                 }
             })
             .catch(err => {
-                console.log(err)
-                if(err.response.status == '404')
-                    msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+                tracker.profileErrors(err)
             })
     }

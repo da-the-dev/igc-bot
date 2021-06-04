@@ -50,35 +50,10 @@ module.exports =
                         )
                 )
 
-                const mwkds = [
-                    constants.roles.mwkd1,
-                    constants.roles.mwkd2,
-                    constants.roles.mwkd3,
-                    constants.roles.mwkd4
-                ]
-
                 const numKD = Number(stats[0].children[1].textContent)
-                if(numKD >= 1 && numKD < 2 && !msg.member.roles.cache.get(constants.roles.mwkd1)) {
-                    msg.member.roles.remove(mwkds)
-                    msg.member.roles.add(constants.roles.mwkd1)
-                }
-                if(numKD >= 2 && numKD < 3 && !msg.member.roles.cache.get(constants.roles.mwkd2)) {
-                    msg.member.roles.remove(mwkds)
-                    msg.member.roles.add(constants.roles.mwkd2)
-                }
-                if(numKD >= 3 && numKD < 4 && !msg.member.roles.cache.get(constants.roles.mwkd3)) {
-                    msg.member.roles.remove(mwkds)
-                    msg.member.roles.add(constants.roles.mwkd3)
-                }
-                if(numKD >= 4 && !msg.member.roles.cache.get(constants.roles.mwkd4)) {
-                    msg.member.roles.remove(mwkds)
-                    msg.member.roles.add(constants.roles.mwkd4)
-                }
-
+                tracker.kdRoles('modern-warfare', msg.member, numKD)
             })
             .catch(err => {
-                console.log(err)
-                if(err.response.status == '404')
-                    msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+                tracker.profileErrors(err)
             })
     }
