@@ -120,16 +120,18 @@ module.exports.reg =
  * @param {Message} msg 
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  */
-module.exports.clear =
-    async (msg, game) => {
-        const prettyName = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ') : 'Warzone'
-        const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
+module.exports.clear = async (msg, game) => {
+    const prettyName = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ') : 'Warzone'
+    const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
 
-        const user = await new DBUser(msg.guild.id, msg.author.id)
-        delete user[code]
-        user.save()
-        msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно откреплен`)
-    }
+    const user = await new DBUser(msg.guild.id, msg.author.id)
+    delete user[code]
+    user.save()
+
+    resetRoles(game, msg.member)
+
+    msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно откреплен`)
+}
 
 /**
  * Register user game profile in database
@@ -190,7 +192,7 @@ module.exports.presetEmbed = (msg, game, user, link) => {
  * @param {GuildMember} member
  * @param {number} kd
  */
-module.exports.kdRoles = (game, member, kd) => {
+module.exports.kdRoles = async (game, member, kd) => {
     var kdRoles = []
     switch(game) {
         case 'warzone':
@@ -199,29 +201,68 @@ module.exports.kdRoles = (game, member, kd) => {
         case 'modern-warfare':
             kdRoles = [constants.roles.mwkd1, constants.roles.mwkd2, constants.roles.mwkd3, constants.roles.mwkd4]
             break
-        case 'warzone':
+        case 'cold-war':
             kdRoles = [constants.roles.cwkd1, constants.roles.cwkd2, constants.roles.cwkd3, constants.roles.cwkd4]
             break
     }
 
+    console.log(kdRoles)
+
+    console.log(kd)
 
     if(kd < 2 && !member.roles.cache.get(kdRoles[0])) {
-        member.roles.remove(kdRoles)
-        member.roles.add(kdRoles[0])
+        await member.roles.remove(kdRoles)
+        await member.roles.add(kdRoles[0])
     }
     if(kd >= 2 && kd < 3 && !member.roles.cache.get(kdRoles[1])) {
-        member.roles.remove(kdRoles)
-        member.roles.add(kdRoles[1])
+        await member.roles.remove(kdRoles)
+        await member.roles.add(kdRoles[1])
     }
     if(kd >= 3 && kd < 4 && !member.roles.cache.get(kdRoles[2])) {
-        member.roles.remove(kdRoles)
-        member.roles.add(kdRoles[2])
+        await member.roles.remove(kdRoles)
+        await member.roles.add(kdRoles[2])
     }
     if(kd >= 4 && !member.roles.cache.get(kdRoles[3])) {
-        member.roles.remove(kdRoles)
-        member.roles.add(kdRoles[3])
+        await member.roles.remove(kdRoles)
+        await member.roles.add(kdRoles[3])
     }
 }
+
+/**
+ * Take game roles from user
+ * @param {'warzone'|'modern-warfare'|'cold-war'} game
+ * @param {GuildMember} member
+ */
+const resetRoles = async (game, member) => {
+    var roles2remove = []
+    var kdRoles = []
+    switch(game) {
+        case 'warzone':
+            kdRoles = [constants.roles.wzkd1, constants.roles.wzkd2, constants.roles.wzkd3, constants.roles.wzkd4]
+            break
+        case 'modern-warfare':
+            kdRoles = [constants.roles.mwkd1, constants.roles.mwkd2, constants.roles.mwkd3, constants.roles.mwkd4]
+            break
+        case 'cold-war':
+            kdRoles = [constants.roles.cwkd1, constants.roles.cwkd2, constants.roles.cwkd3, constants.roles.cwkd4]
+            break
+    }
+
+    console.log(kdRoles)
+    console.log(constants.roles[gameDecoder(game).code])
+
+    roles2remove = roles2remove.concat(kdRoles) // Remove K/D roles
+    roles2remove.push(constants.roles[gameDecoder(game).code]) // Remove game role
+    if(game == 'warzone') // Remove kill-related roles
+        roles2remove = roles2remove.concat([constants.roles.wz5000ks, constants.roles.wz10000ks, constants.roles.wz20000ks])
+
+    console.log(roles2remove)
+    // Actually remove all roles
+    await member.roles.remove(roles2remove)
+
+    console.log('done')
+}
+
 
 module.exports.profileErrors = err => {
     console.log(err)
