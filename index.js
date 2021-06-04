@@ -59,7 +59,19 @@ process.on('res', exitHandler.bind(null, { cleanup: true }));
 process.on('SIGINT', exitHandler.bind(null, { exit: true }));
 process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
 process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
-process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
+process.on('uncaughtException', err => {
+    exitHandler.bind(null, { exit: true })
+    lastMessages = lastMessages.reverse()
+    utl.errorReporter(lastMessages.find(m => !m.deleted), err)
+    lastMessages = lastMessages.reverse()
+    console.log(err)
+});
+process.on('unhandledRejection', err => {
+    lastMessages = lastMessages.reverse()
+    utl.errorReporter(lastMessages.find(m => !m.deleted), err)
+    lastMessages = lastMessages.reverse()
+    console.log(err)
+});
 
 
 client.login(process.env.BOTTOKEN)
