@@ -135,12 +135,12 @@ module.exports.clear = async (msg, game) => {
 
 /**
  * Register user game profile in database
- * @param {Message} msg
+ * @param {GuildMember} member
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @param {DBUser} user
  * @param {string} link
  */
-module.exports.presetEmbed = (msg, game, user, link) => {
+module.exports.presetEmbed = (member, game, user, link) => {
     const dg = gameDecoder(game)
 
     // Selecting platform
@@ -177,11 +177,11 @@ module.exports.presetEmbed = (msg, game, user, link) => {
     // Cooking an embed
     return new MessageEmbed({
         "title": `Обновление статистики ${dg.prettyName}`,
-        "description": `${e.info} Ник: ${msg.author} | ${platform}: [** ${user[dg.code].usertag}**](${link})`,
+        "description": `${e.info} Ник: ${member.user} | ${platform}: [** ${user[dg.code].usertag}**](${link})`,
         "color": 7807101
     })
-        .setAuthor(msg.author.tag, msg.author.displayAvatarURL({ dynamic: true }))
-        .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', msg.client.user.displayAvatarURL({ dynamic: true }))
+        .setAuthor(member.user.tag, member.user.displayAvatarURL({ dynamic: true }))
+        .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', member.client.user.displayAvatarURL({ dynamic: true }))
         .setImage('https://i.stack.imgur.com/Fzh0w.png')
         .setThumbnail(thumb)
 }
