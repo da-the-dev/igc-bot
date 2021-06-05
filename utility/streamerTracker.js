@@ -1,4 +1,5 @@
 const { Presence } = require("discord.js");
+const constants = require('../constants.json')
 
 /**
  * Gives LIVE role to currently active streamers

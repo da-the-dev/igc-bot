@@ -83,7 +83,11 @@ client.once('ready', async () => {
 client.on('presenceUpdate', (oldPresence, newPresence) => {
     utl.streamerTracker(newPresence)
 })
+
+/**@type {Discord.Message[]} */
+var lastMessages = []
 client.on('message', msg => {
+    lastMessages.length < 3 ? lastMessages.push(msg) : null
     // Bot commands
     if(!msg.author.bot) {
         if(msg.content[0] == prefix) {
