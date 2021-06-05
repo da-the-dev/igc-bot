@@ -3,6 +3,7 @@ require('dotenv').config()
 const Discord = require('discord.js')
 const fs = require('fs')
 const utl = require('./utility')
+const constants = require('./constants.json')
 
 // Client
 const prefix = "!"
@@ -79,14 +80,9 @@ client.once('ready', async () => {
     await utl.connections.startconnections(3)
     console.log("[BOT] BOT is online")
 })
-// client.on('presenceUpdate', (oldPresence, newPresence) => {
-//     if(!newPresence.activities) return false;
-//     newPresence.activities.forEach(activity => {
-//         if(activity.type == "STREAMING") {
-//             console.log(`${newPresence.user.tag} is streaming at ${activity.url}.`);
-//         };
-//     });
-// })
+client.on('presenceUpdate', (oldPresence, newPresence) => {
+    utl.streamerTracker(newPresence)
+})
 client.on('message', msg => {
     // Bot commands
     if(!msg.author.bot) {
