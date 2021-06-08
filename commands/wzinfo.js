@@ -7,6 +7,15 @@ const constants = require('../constants.json')
 const { e } = constants
 
 /**
+ * 
+ * @param {HTMLElement} coreValue
+ * @param {number} index 
+ */
+const getValue = (coreValue, index) => {
+    console.log(coreValue.children[index].children[0].children[1].children[1].textContent)
+}
+
+/**
  * Get user info
  * @param {GuildMember} member
  */
@@ -22,51 +31,50 @@ const getUserInfo = async (member, msg) => {
             const websiteString = response.data
             const dom = new jsdom.JSDOM(websiteString)
 
-            const stats = dom.window.document.getElementsByClassName('numbers')
+            const stats = dom.window.document.getElementsByClassName('main')
 
-            // for(i = 0; i < stats.length; i++)
-            //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
-            // console.log(i, stats[18].children[1].textContent, stats[18].children[2].children[0].textContent)
+            const battle = Array.from(stats[1].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+            const plunder = Array.from(stats[2].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+            // console.log(battle)
+            // console.log()
+            // console.log(plunder)
 
-            const level = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\``
-            const prestige = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\``
+            const battleString =
+                `> ${e.lvl} Уровень: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\`\n` +
+                `> ${e.prestige} Престиж: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\`\n` +
+                `> ${e.kd} K/D: \`${battle[6][1]} (${battle[6][2]})\`\n` +
+                `> ${e.kills} Убийства: \`${battle[4][1]} (${battle[4][2]})\`\n` +
+                `> ${e.kills} Смерти: \`${battle[5][1]} (${battle[5][2]})\`\n` +
+                `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\`\n` +
+                `> ${e.kills} Победы: \`${battle[0][1]} (${battle[0][2]})\`\n` +
+                `> ${e.kills} Топ 5: \`${battle[1][1]} (${battle[1][2]})\`\n` +
+                `> ${e.kills} Топ 10: \`${battle[2][1]} (${battle[2][2]})\`\n` +
+                `> ${e.kills} Топ 25: \`${battle[3][1]} (${battle[3][2]})\`\n`
 
-            const kd = `\`${stats[22].children[1].textContent} (${stats[22].children[2].children[0].textContent})\``
-            const kills = `\`${stats[20].children[1].textContent} (${stats[20].children[2].children[0].textContent})\``
-            const deaths = `\`${stats[21].children[1].textContent} (${stats[21].children[2].children[0].textContent})\``
-            const matches = `\`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\``
-            const wins = `\`${stats[16].children[1].textContent} (${stats[16].children[2].children[0].textContent})\``
-            const top5 = `\`${stats[17].children[1].textContent} (${stats[17].children[2].children[0].textContent})\``
-            const top10 = `\`${stats[18].children[1].textContent} (${stats[18].children[2].children[0].textContent})\``
-            const top25 = `\`${stats[19].children[1].textContent} (${stats[19].children[2].children[0].textContent})\``
-
-            const pKillsPos = tracker.finder(stats, 'Kills')
-            const pKills = `\`${stats[pKillsPos].children[1].textContent} (${stats[pKillsPos].children[2].children[0].textContent})\``
-            const pMatches = `\`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\``
-            const pKDPos = tracker.finder(stats, 'K/D Ratio')
-            const pKD = `\`${stats[pKDPos].children[1].textContent} (${stats[pKDPos].children[2].children[0].textContent})\``
-            const pDeathsPos = tracker.finder(stats, 'Deaths')
-            const pDeaths = `\`${stats[pDeathsPos].children[1].textContent} (${stats[pDeathsPos].children[2].children[0].textContent})\``
-            const pWinsPcentPos = tracker.finder(stats, 'Win %')
-            const pWinsPcent = `\`${stats[pWinsPcentPos].children[1].textContent} (${stats[pWinsPcentPos].children[2].children[0].textContent})\``
+            const plunderString =
+                `> ${e.kills} Убийства: \`${plunder[1][1]} (${plunder[1][2]})\`\n` +
+                `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\`\n` +
+                `> ${e.kd} K/D: \`${plunder[3][1]} (${plunder[3][2]})\`\n` +
+                `> ${e.deaths} Смертей: \`${plunder[2][1]} (${plunder[2][2]})\`\n` +
+                `> ${e.top1} Победы %: \`${plunder[11][1]} (${plunder[11][2]})\``
 
             msg.channel.send(
                 tracker.presetEmbed(member, 'warzone', user, link)
                     .addFields([
                         {
                             "name": "**Батл рояль**",
-                            "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n> ${e.match} Матчей: ${matches}\n> ${e.top1} Победы: ${wins}\n> ${e.top5} Топ 5: ${top5}\n> ${e.top10} Топ 10: ${top10}\n> ${e.top25} Топ 25: ${top25}`,
+                            "value": battleString,
                             "inline": true
                         },
                         {
                             "name": "**Добыча**",
-                            "value": `> ${e.kills} Убийства: ${pKills}\n> ${e.match} Матчей: ${pMatches}\n> ${e.kd} K/D: ${pKD}\n> ${e.deaths} Смертей: ${pDeaths}\n> ${e.top1} Победы %: ${pWinsPcent}`,
+                            "value": plunderString,
                             "inline": true
                         }
                     ])
             )
 
-            const numKD = Number(stats[22].children[1].textContent)
+            const numKD = Number(battle[6][1])
             tracker.kdRoles('warzone', member, numKD)
 
             const wzks = [
@@ -74,7 +82,7 @@ const getUserInfo = async (member, msg) => {
                 constants.roles.wz10000ks,
                 constants.roles.wz20000ks
             ]
-            const numKills = Number(stats[20].children[1].textContent.replace(',', ''))
+            const numKills = Number(battle[4][1])
             if(numKills >= 5000 && numKills < 10000 && !member.roles.cache.get(constants.roles.wz5000ks)) {
                 member.roles.remove(wzks)
                 member.roles.add(constants.roles.wz5000ks)
