@@ -24,46 +24,47 @@ const getUserInfo = async (member, msg) => {
 
             const stats = dom.window.document.getElementsByClassName('main')
 
-            const battle = Array.from(stats[1].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
-            const plunder = Array.from(stats[2].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+            var battle, battleString, plunder, plunderString
+            try {
+                battle = Array.from(stats[1].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+                battleString =
+                    `> ${e.lvl} Уровень: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\`\n` +
+                    `> ${e.prestige} Престиж: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\`\n` +
+                    `> ${e.kd} K/D: \`${battle[6][1]} (${battle[6][2]})\`\n` +
+                    `> ${e.kills} Убийства: \`${battle[4][1]} (${battle[4][2]})\`\n` +
+                    `> ${e.kills} Смерти: \`${battle[5][1]} (${battle[5][2]})\`\n` +
+                    `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\`\n` +
+                    `> ${e.kills} Победы: \`${battle[0][1]} (${battle[0][2]})\`\n` +
+                    `> ${e.kills} Топ 5: \`${battle[1][1]} (${battle[1][2]})\`\n` +
+                    `> ${e.kills} Топ 10: \`${battle[2][1]} (${battle[2][2]})\`\n` +
+                    `> ${e.kills} Топ 25: \`${battle[3][1]} (${battle[3][2]})\`\n`
+            } catch(err) { console.log('No battle data!') }
+
+            try {
+                plunder = Array.from(stats[2].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+                plunderString =
+                    `> ${e.kills} Убийства: \`${plunder[1][1]} (${plunder[1][2]})\`\n` +
+                    `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\`\n` +
+                    `> ${e.kd} K/D: \`${plunder[3][1]} (${plunder[3][2]})\`\n` +
+                    `> ${e.deaths} Смертей: \`${plunder[2][1]} (${plunder[2][2]})\`\n` +
+                    `> ${e.top1} Победы %: \`${plunder[11][1]} (${plunder[11][2]})\``
+            } catch(err) { console.log('No plunder data!') }
             // console.log(battle)
             // console.log()
             // console.log(plunder)
 
-            const battleString =
-                `> ${e.lvl} Уровень: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\`\n` +
-                `> ${e.prestige} Престиж: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\`\n` +
-                `> ${e.kd} K/D: \`${battle[6][1]} (${battle[6][2]})\`\n` +
-                `> ${e.kills} Убийства: \`${battle[4][1]} (${battle[4][2]})\`\n` +
-                `> ${e.kills} Смерти: \`${battle[5][1]} (${battle[5][2]})\`\n` +
-                `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\`\n` +
-                `> ${e.kills} Победы: \`${battle[0][1]} (${battle[0][2]})\`\n` +
-                `> ${e.kills} Топ 5: \`${battle[1][1]} (${battle[1][2]})\`\n` +
-                `> ${e.kills} Топ 10: \`${battle[2][1]} (${battle[2][2]})\`\n` +
-                `> ${e.kills} Топ 25: \`${battle[3][1]} (${battle[3][2]})\`\n`
+            const emb = tracker.presetEmbed(member, 'warzone', user, link)
 
-            const plunderString =
-                `> ${e.kills} Убийства: \`${plunder[1][1]} (${plunder[1][2]})\`\n` +
-                `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\`\n` +
-                `> ${e.kd} K/D: \`${plunder[3][1]} (${plunder[3][2]})\`\n` +
-                `> ${e.deaths} Смертей: \`${plunder[2][1]} (${plunder[2][2]})\`\n` +
-                `> ${e.top1} Победы %: \`${plunder[11][1]} (${plunder[11][2]})\``
 
-            msg.channel.send(
-                tracker.presetEmbed(member, 'warzone', user, link)
-                    .addFields([
-                        {
-                            "name": "**Батл рояль**",
-                            "value": battleString,
-                            "inline": true
-                        },
-                        {
-                            "name": "**Добыча**",
-                            "value": plunderString,
-                            "inline": true
-                        }
-                    ])
-            )
+            if(battle) emb.addField('**Батл рояль**', battleString, true)
+            if(plunder) emb.addField('**Добыча**', plunderString, true)
+
+            if(emb.fields.length <= 0)
+                embed.warning(msg, 'Не найдена никакая статистика по игроку!')
+            else {
+                msg.channel.send(emb)
+                return
+            }
 
             const numKD = Number(battle[6][1])
             tracker.kdRoles('warzone', member, numKD)
