@@ -166,7 +166,7 @@ module.exports.presetEmbed = (member, game, user, link) => {
     return new MessageEmbed({
         "title": `Обновление статистики ${dg.prettyName}`,
         "description": `${e.info} Ник: ${member.user} | ${platform}: [** ${user[dg.code].usertag}**](${link})`,
-        "color": 7807101
+        "color": 9109759
     })
         .setAuthor(member.user.tag, member.user.displayAvatarURL({ dynamic: true }))
         .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', member.client.user.displayAvatarURL({ dynamic: true }))
