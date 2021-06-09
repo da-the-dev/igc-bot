@@ -1,5 +1,5 @@
 const { Message, MessageEmbed, GuildMember } = require('discord.js')
-const { db } = require('../utility')
+const { db, embed } = require('../utility')
 const { DBUser, getConnection } = db
 const axios = require('axios').default
 const constants = require('../constants.json')
@@ -46,18 +46,18 @@ module.exports.reg =
 
         const usertag = args[0]
         if(!usertag) {
-            msg.channel.send(':no_entry_sign: Ошибка, не указано имя пользователя !')
+            embed.error(msg, 'Ошибка, не указано имя пользователя!')
             return
         }
         const platform = args[1]
         if(!platform) {
-            msg.channel.send(':no_entry_sign: Ошибка, не указана платформа !\n' + platforms)
+            embed.error(msg, 'Ошибка, не указана платформа!\n' + platforms)
             return
         }
 
         const susUser = await getConnection().qget(msg.guild.id, { [`${code}.usertag`]: usertag })
         if(susUser) {
-            msg.channel.send(`:warning: Профиль **${prettyName}** ${usertag} уже закреплен за <@${susUser.id}>`)
+            embed.warning(msg, `Профиль **${prettyName}** ${usertag} уже закреплен за <@${susUser.id}>`)
             return
         }
 
@@ -81,7 +81,7 @@ module.exports.reg =
                 linkPlatform = 'xbl'
                 break
             default:
-                msg.channel.send(':no_entry_sign: Ошибка, указана неверная платформа !\n' + platforms)
+                embed.error(msg, 'Ошибка, указана неверная платформа!\n' + platforms)
                 return
         }
 
@@ -93,13 +93,15 @@ module.exports.reg =
                 const user = await new DBUser(msg.guild.id, msg.author.id)
                 user[code] = { usertag: usertag, platform: linkPlatform }
                 await user.save()
-                msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно закреплен | ${usertag}`)
+
+                embed.ok(msg, `${msg.author}, Ваш профиль **${prettyName}** успешно закреплен | ${usertag}`)
             })
             .catch(err => {
-                if(err.response.status == '404')
-                    msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+                if(err.response && err.response.status == '404')
+                    embed.error(msg, 'Ошибка, профиль не найден!')
                 else
-                    msg.channel.send(`:no_entry_sign: Ошибка ${err.response.status}: \`${err.response.statusMessage}\`. Возможно, ошибка на стороне провайдера информации, попробуйте позже !`)
+                    console.log(err)
+                // msg.channel.send(`Ошибка ${err}: \`${err.response.statusMessage}\`. Возможно, ошибка на стороне провайдера информации, попробуйте позже!`)
             })
     }
 
@@ -118,7 +120,7 @@ module.exports.clear = async (msg, game) => {
 
     resetRoles(game, msg.member)
 
-    msg.channel.send(`:white_check_mark: ${msg.author}, Ваш профиль **${prettyName}** успешно откреплен`)
+    embed.ok(msg, `${msg.author}, Ваш профиль **${prettyName}** успешно откреплен`)
 }
 
 /**
@@ -247,5 +249,5 @@ const resetRoles = async (game, member) => {
 module.exports.profileErrors = err => {
     console.log(err)
     if(err.response && err.response.status == '404')
-        msg.channel.send(':no_entry_sign: Ошибка, профиль не найден!')
+        embed.error(msg, 'Ошибка, профиль не найден!')
 }

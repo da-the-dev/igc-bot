@@ -1,7 +1,7 @@
 const { Message, Client, GuildMember, Guild } = require('discord.js')
 const axios = require('axios').default
 const jsdom = require("jsdom")
-const { db, tracker } = require('../utility')
+const { db, tracker, embed } = require('../utility')
 const { DBUser } = db
 const constants = require('../constants.json')
 const { e } = constants
@@ -13,7 +13,7 @@ const { e } = constants
 const getUserInfo = async (member, msg) => {
     const user = await new DBUser(member.guild.id, member.id)
     if(!user.mw) {
-        msg.channel.send(`:warning: К участнику ${member} не привязан профиль **Modern Warfare**`)
+        embed.warning(msg, `К участнику ${member} не привязан профиль **Modern Warfare**`)
         return
     }
     const link = `https://cod.tracker.gg/modern-warfare/profile/${user.mw.platform}/${user.mw.usertag.replace('#', '%23')}/mp`

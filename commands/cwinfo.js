@@ -1,7 +1,7 @@
 const { Message, Client, MessageEmbed } = require('discord.js')
 const axios = require('axios').default
 const jsdom = require("jsdom")
-const { db, tracker } = require('../utility')
+const { db, tracker, embed } = require('../utility')
 const { DBUser } = db
 const constants = require('../constants.json')
 const { e } = constants
@@ -9,7 +9,7 @@ const { e } = constants
 const getUserInfo = async (member, msg) => {
     const user = await new DBUser(member.guild.id, member.id)
     if(!user.cw) {
-        msg.channel.send(`:warning: К участнику ${member} не привязан профиль **Cold War**`)
+        embed.warning(msg, `К участнику ${member} не привязан профиль **Cold War**`)
         return
     }
     const link = `https://cod.tracker.gg/cold-war/profile/${user.cw.platform}/${user.cw.usertag.replace('#', '%23')}/mp`
