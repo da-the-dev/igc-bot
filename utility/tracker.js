@@ -19,6 +19,23 @@ const gameDecoder = game => {
 }
 
 /**
+ * Returns game's link remainder
+ * @param {'warzone'|'modern-warfare'|'cold-war'} game
+ * @returns
+ */
+const linkRemainder = game => {
+    switch(game) {
+        case 'warzone':
+            return 'detailed'
+        case 'modern-warfare':
+            return 'mp'
+        case 'cold-war':
+            return 'mp'
+    }
+}
+module.exports.linkRemainder = linkRemainder
+
+/**
  * Register user game profile in database
  * @param {Message} msg
  * @param {string[]} args 
@@ -30,19 +47,6 @@ module.exports.reg =
         const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
 
         // console.log(prettyName, code, constants.roles[code])
-
-        var linkRemainder = ''
-        switch(game) {
-            case 'warzone':
-                linkRemainder = 'detailed'
-                break
-            case 'modern-warfare':
-                linkRemainder = 'mp'
-                break
-            case 'cold-war':
-                linkRemainder = 'mp'
-                break
-        }
 
         const usertag = args[0]
         if(!usertag) {
@@ -65,19 +69,19 @@ module.exports.reg =
         var linkPlatform = ''
         switch(platform) {
             case 'battle':
-                link = `https://cod.tracker.gg/${game}/profile/battlenet/${usertag.replace('#', '%23')}/${linkRemainder}`
+                link = `https://cod.tracker.gg/${game}/profile/battlenet/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'battlenet'
                 break
             case 'activ':
-                link = `https://cod.tracker.gg/${game}/profile/atvi/${usertag.replace('#', '%23')}/${linkRemainder}`
+                link = `https://cod.tracker.gg/${game}/profile/atvi/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'atvi'
                 break
             case 'ps':
-                link = `https://cod.tracker.gg/${game}/profile/psn/${usertag.replace('#', '%23')}/${linkRemainder}`
+                link = `https://cod.tracker.gg/${game}/profile/psn/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'psn'
                 break
             case 'xbox':
-                link = `https://cod.tracker.gg/${game}/profile/xbl/${usertag.replace('#', '%23')}/${linkRemainder}`
+                link = `https://cod.tracker.gg/${game}/profile/xbl/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'xbl'
                 break
             default:
