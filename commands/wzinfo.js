@@ -7,15 +7,6 @@ const constants = require('../constants.json')
 const { e } = constants
 
 /**
- * 
- * @param {HTMLElement} coreValue
- * @param {number} index 
- */
-const getValue = (coreValue, index) => {
-    console.log(coreValue.children[index].children[0].children[1].children[1].textContent)
-}
-
-/**
  * Get user info
  * @param {GuildMember} member
  */
