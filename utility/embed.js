@@ -14,33 +14,46 @@ const standard = (msg) => {
  * OK reply
  * @param {Message} msg 
  * @param {tring} content 
+ * @returns {MessageEmbed|Message}
  */
-module.exports.ok = (msg, content) => {
-    msg.channel.send(
-        new MessageEmbed(standard(msg))
-            .setDescription(`:white_check_mark: ${content}`)
-            .setColor('00D084')
-    )
+module.exports.ok = (msg, content, send = true) => {
+    const emb = new MessageEmbed(standard(msg))
+        .setDescription(`:white_check_mark: ${content}`)
+        .setColor('00D084')
+    if(send)
+        return msg.channel.send(emb)
+    else
+        return emb
 }
 
 /**
  * Warning reply
  * @param {Message} msg
  * @param {tring} content
+ * @returns {MessageEmbed|Message}
  */
-module.exports.warning = (msg, content) => {
-    msg.channel.send(new MessageEmbed(standard(msg))
+module.exports.warning = (msg, content, send = true) => {
+    const emb = new MessageEmbed(standard(msg))
         .setDescription(`:warning: ${content}`)
-        .setColor('FF6900'))
+        .setColor('FF6900')
+    if(send)
+        return msg.channel.send(emb)
+    else
+        return emb
 }
 
 /**
  * Error reply
  * @param {Message} msg
  * @param {tring} content
+ * @returns {MessageEmbed|Message}
  */
-module.exports.error = (msg, content) => {
-    msg.channel.send(new MessageEmbed(standard(msg))
+module.exports.error = (msg, content, send = true) => {
+    const emb = new MessageEmbed(standard(msg))
         .setDescription(`:no_entry_sign: ${content}`)
-        .setColor('FF0000'))
+        .setColor('FF0000')
+    if(send)
+        return msg.channel.send(emb)
+    else
+        return emb
 }
