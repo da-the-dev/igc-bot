@@ -1,7 +1,6 @@
-const { Message, Client, CategoryChannel } = require('discord.js')
+const { Message, Client } = require('discord.js')
 const { embed, lobbiesManager } = require('../utility')
 const constants = require('../constants.json')
-const { MessageButton } = require('discord-buttons')
 
 module.exports =
     /**
@@ -23,7 +22,7 @@ module.exports =
             if(roomData)
                 msg.channel.send(`<@&${constants.roles.wz}>`, roomData)
             else {
-                const message = await embed.warning(msg, `${msg.author}, трио комната по уровню не найдена, создаю...`)
+                const message = await embed.warning(msg, `${msg.author}, **TRIO** комната по уровню не найдена, создаю...`)
                 const roomData = await lobbiesManager.roomSpawner('warzone', 3, kd, msg)
                 message.edit(`<@&${constants.roles.wz}>`, roomData)
             }
