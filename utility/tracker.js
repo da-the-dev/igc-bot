@@ -11,7 +11,7 @@ const platforms = 'Поддерживаемые платформы:\n\nº**Battl
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @returns
  */
-const gameDecoder = game => {
+module.exports.gameDecoder = game => {
     const prettyName = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toUpperCase() + e.slice(1)).join(' ') : 'Warzone'
     const code = game != 'warzone' ? game.replace('-', ' ').split(' ').map(e => e = e[0].toLowerCase()).join('') : 'wz'
 
@@ -135,7 +135,7 @@ module.exports.clear = async (msg, game) => {
  * @param {string} link
  */
 module.exports.presetEmbed = (member, game, user, link) => {
-    const dg = gameDecoder(game)
+    const dg = this.gameDecoder(game)
 
     // Selecting platform
     var platform = ''
@@ -241,7 +241,7 @@ const resetRoles = async (game, member) => {
     }
 
     roles2remove = roles2remove.concat(kdRoles) // Remove K/D roles
-    roles2remove.push(constants.roles[gameDecoder(game).code]) // Remove game role
+    roles2remove.push(constants.roles[this.gameDecoder(game).code]) // Remove game role
     if(game == 'warzone') // Remove kill-related roles
         roles2remove = roles2remove.concat([constants.roles.wz5000ks, constants.roles.wz10000ks, constants.roles.wz20000ks])
 
