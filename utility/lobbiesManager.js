@@ -66,7 +66,7 @@ module.exports.roomSpawner = async (game, size, kd, msg) => {
     const dg = tracker.gameDecoder(game)
     const sizeName = this.sizeDecoder(size)
 
-    const trioRoom = await msg.guild.channels.create(`${sizeName} ${dg.code.toUpperCase()} KD ${kd}+`, {
+    const trioRoom = await msg.guild.channels.create(`${dg.code.toUpperCase()} ${sizeName} KD ${kd}+`, {
         type: 'voice',
         permissionOverwrites: [
             {
