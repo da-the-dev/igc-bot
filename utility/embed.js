@@ -14,7 +14,7 @@ const standard = (msg) => {
  * OK reply
  * @param {Message} msg 
  * @param {tring} content 
- * @returns {MessageEmbed|Message}
+ * @returns {Promise<Message>|MessageEmbed}
  */
 module.exports.ok = (msg, content, send = true) => {
     const emb = new MessageEmbed(standard(msg))
