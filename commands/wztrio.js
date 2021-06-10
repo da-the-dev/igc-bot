@@ -1,5 +1,5 @@
 const { Message, Client, CategoryChannel } = require('discord.js')
-const { embed } = require('../utility')
+const { embed, lobbiesManager } = require('../utility')
 const constants = require('../constants.json')
 const { MessageButton } = require('discord-buttons')
 
@@ -17,49 +17,20 @@ module.exports =
             return
         }
 
-        /**@type {CategoryChannel} */
-        const rooms = msg.guild.channels.cache.get('560124689645699072')
-        const trio = rooms.children.find(c => c.name.includes('WZ') && c.name.includes('Trio') && c.name.includes(`KD ${kd}+`))
-
-        if(trio) {
-            const emb = await embed.ok(msg, `${msg.author}, нашел для Вас трио комнату по уровню!`, false)
-            const inviteLink = (await trio.createInvite()).url
-            const button = new MessageButton()
-                .setLabel('Ссылка на подключение')
-                .setStyle('url')
-                .setURL(inviteLink)
-
-            msg.channel.send(`<@&${constants.roles.wz}>`, { embed: emb, component: button })
-        } else {
-            const message = await embed.warning(msg, `${msg.author}, трио комната по уровню не найдена, создаю...`)
-            const trioRoom = await msg.guild.channels.create(`Trio WZ KD ${kd}+`, {
-                type: 'voice',
-                permissionOverwrites: [
-                    {
-                        id: constants.roles.mute,
-                        deny: 'CONNECT'
-                    }
-                ].concat(
-                    Object.entries(new Object(constants.roles))
-                        .filter(r => r[0].startsWith('wzkd') && Number(r[0].slice(4)) < kd)
-                        .map(r => r[1])
-                        .map(r => {
-                            return {
-                                'id': r,
-                                'deny': ['CONNECT']
-                            }
-                        })
-                ),
-                userLimit: 3,
-                parent: rooms
-            })
-            const emb = await embed.ok(msg, `${msg.author}, трио комната по уровню создана!`, false)
-
-            const inviteLink = (await trioRoom.createInvite()).url
-            const button = new MessageButton()
-                .setLabel('Ссылка на подключение')
-                .setStyle('url')
-                .setURL(inviteLink)
-            message.edit(`<@&${constants.roles.wz}>`, { embed: emb, component: button })
+        const create = args[1]
+        if(!create) {
+            const roomData = await lobbiesManager.roomFinder('warzone', 3, kd, msg)
+            if(roomData)
+                msg.channel.send(`<@&${constants.roles.wz}>`, roomData)
+            else {
+                const message = await embed.warning(msg, `${msg.author}, трио комната по уровню не найдена, создаю...`)
+                const roomData = await lobbiesManager.roomSpawner('warzone', 3, kd, msg)
+                message.edit(`<@&${constants.roles.wz}>`, roomData)
+            }
+        } else if(create == 'create') {
+            const roomData = await lobbiesManager.roomSpawner('warzone', 3, kd, msg)
+            message.edit(`<@&${constants.roles.wz}>`, roomData)
         }
+        else
+            embed.error(msg, 'Неверный параметр команды! Укажите в конце `create`, если хотите создать комнату!')
     }
