@@ -81,6 +81,13 @@ client.login(process.env.BOTTOKEN)
 client.once('ready', async () => {
     await utl.connections.startconnections(3)
     console.log("[BOT] BOT is online")
+    client.guild = client.guilds.cache.get('353929650734628874')
+    if(client.guild)
+        utl.lobbiesManager.sweeper(client.guild)
+})
+
+client.on('voiceStateUpdate', (oldState, newState) => {
+    utl.lobbiesManager.delete(oldState, newState)
 })
 client.on('presenceUpdate', (oldPresence, newPresence) => {
     utl.streamerTracker(newPresence)
