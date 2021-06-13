@@ -1,5 +1,5 @@
 const { Message, Client } = require('discord.js')
-const { tracker } = require('../utility')
+const { tracker } = require('../../utility')
 
 module.exports =
     /**
