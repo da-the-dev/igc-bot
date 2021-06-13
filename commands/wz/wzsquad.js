@@ -1,6 +1,6 @@
 const { Message, Client } = require('discord.js')
-const { embed } = require('../utility')
-const WZLobby = require('../classes/lobbies/WZLobby')
+const { embed } = require('../../utility')
+const WZLobby = require('../../classes/lobbies/WZLobby')
 
 module.exports =
     /**

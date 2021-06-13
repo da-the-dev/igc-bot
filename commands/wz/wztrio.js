@@ -1,13 +1,13 @@
 const { Message, Client } = require('discord.js')
-const { embed } = require('../utility')
-const WZLobby = require('../classes/lobbies/WZLobby')
+const { embed } = require('../../utility')
+const WZLobby = require('../../classes/lobbies/WZLobby')
 
 module.exports =
     /**
     * @param {Array<string>} args Command argument
     * @param {Message} msg Discord message object
     * @param {Client} client Discord client object
-    * @description Usage: .wzduo <?kd>
+    * @description Usage: .wztrio <?kd>
     */
     async (args, msg, client) => {
         const kd = Number(args[0])
@@ -16,5 +16,5 @@ module.exports =
             return
         }
 
-        WZLobby.create(msg, 2, kd, args[1])
+        WZLobby.create(msg, 3, kd, args[1])
     }
