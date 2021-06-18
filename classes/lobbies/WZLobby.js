@@ -1,4 +1,4 @@
-const { Guild, VoiceChannel, CategoryChannel, Message } = require('discord.js')
+const { Guild, VoiceChannel, CategoryChannel, Message, MessageEmbed } = require('discord.js')
 const constants = require('../../constants.json')
 const { embed } = require('../../utility')
 const Lobby = require('./Lobby')
@@ -113,8 +113,24 @@ module.exports = class WZLobby extends Lobby {
         const sizeName = WZLobby.sizeDecoder(size)
         /**@type {CategoryChannel} */
         const rooms = msg.guild.channels.cache.get(constants.categories.lobbies)
+        /**@type {MessageEmbed} */
         const ok = embed.ok(msg, `${msg.author}, нашел для Вас **${sizeName.toUpperCase()}** комнату по уровню!`, false)
+        /**@type {MessageEmbed} */
         const okCreate = embed.ok(msg, `${msg.author}, создал для Вас **${sizeName.toUpperCase()}** комнату по уровню!`, false)
+        switch(size) {
+            case 2:
+                ok.setThumbnail('https://media.discordapp.net/attachments/849266054051528725/854243832605835274/20201221_105209.gif')
+                okCreate.setThumbnail('https://media.discordapp.net/attachments/849266054051528725/854243832605835274/20201221_105209.gif')
+                break
+            case 3:
+                ok.setThumbnail('https://cdn.discordapp.com/attachments/849266054051528725/854243834455261204/20201221_121959.gif')
+                okCreate.setThumbnail('https://cdn.discordapp.com/attachments/849266054051528725/854243834455261204/20201221_121959.gif')
+                break
+            case 4:
+                ok.setThumbnail('https://cdn.discordapp.com/attachments/849266054051528725/854243839481348096/20201221_122132.gif')
+                okCreate.setThumbnail('https://cdn.discordapp.com/attachments/849266054051528725/854243839481348096/20201221_122132.gif')
+                break
+        }
 
         if(!create) {
             const room = rooms.children.find(c => WZLobby.roomFilter(c, sizeName, kd))
@@ -125,11 +141,11 @@ module.exports = class WZLobby extends Lobby {
             else {
                 const message = await embed.warning(msg, `${msg.author}, **${sizeName.toUpperCase()}** комната по уровню не найдена, создаю...`)
                 const lobby = new WZLobby(size, await this.createChannel(size, kd, msg.guild))
-                message.edit(`<@&${constants.roles.wz}>`, { embed: okCreate, component: await lobby.createInviteButton() })
+                message.edit(`:nazar_amulet:  <@${msg.author.id}> ищет напарника по ${sizeName.toUpperCase()} <@&${constants.roles.wz}>`, { embed: okCreate, component: await lobby.createInviteButton() })
             }
         } else {
             const lobby = new WZLobby(size, await this.createChannel(size, kd, msg.guild))
-            msg.channel.send(`<@&${constants.roles.wz}>`, { embed: okCreate, component: await lobby.createInviteButton() })
+            message.edit(`:nazar_amulet:  <@${msg.author.id}> ищет напарника по ${sizeName} <@&${constants.roles.wz}>`, { embed: okCreate, component: await lobby.createInviteButton() })
         }
     }
 

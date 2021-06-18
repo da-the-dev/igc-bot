@@ -93,7 +93,9 @@ module.exports = class MWLobby extends Lobby {
         /**@type {CategoryChannel} */
         const rooms = msg.guild.channels.cache.get(constants.categories.lobbies)
         const ok = embed.ok(msg, `${msg.author}, нашел для Вас комнату по уровню!`, false)
+            .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/854340288675840021/20210615_145845.gif')
         const okCreate = embed.ok(msg, `${msg.author}, создал для Вас комнату по уровню!`, false)
+            .setThumbnail('https://media.discordapp.net/attachments/849266054051528725/854340288675840021/20210615_145845.gif')
 
         if(!create) {
             const room = rooms.children.find(c => MWLobby.roomFilter(c, kd))
@@ -104,19 +106,11 @@ module.exports = class MWLobby extends Lobby {
             else {
                 const message = await embed.warning(msg, `${msg.author}, комната по уровню не найдена, создаю...`)
                 const lobby = new MWLobby(await this.createChannel(kd, msg.guild))
-                message.edit(`<@&${constants.roles.mw}>`, { embed: okCreate, component: await lobby.createInviteButton() })
+                message.edit(`:nazar_amulet:  <@${msg.author.id}> ищет напарника по <@&${constants.roles.mw}>`, { embed: okCreate, component: await lobby.createInviteButton() })
             }
         } else {
             const lobby = new MWLobby(await this.createChannel(kd, msg.guild))
-            msg.channel.send(`<@&${constants.roles.mw}>`, { embed: okCreate, component: await lobby.createInviteButton() })
+            message.edit(`:nazar_amulet:  <@${msg.author.id}> ищет напарника по <@&${constants.roles.mw}>`, { embed: okCreate, component: await lobby.createInviteButton() })
         }
-    }
-
-    /**
-     * Starts a votekick of a member
-     * @param {Member} member 
-     */
-    voteKick(member) {
-
     }
 }
