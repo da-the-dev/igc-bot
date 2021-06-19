@@ -20,17 +20,18 @@ const getUserInfo = async (member, msg) => {
 
             const stats = dom.window.document.getElementsByClassName('numbers')
 
-            // for(i = 0; i < stats.length; i++)
-            //     console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
+            for(let i = 0; i < stats.length; i++)
+                console.log(i, stats[i].children[0].textContent, stats[i].children[1].textContent)
 
             const level = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\``
             const prestige = `\`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\``
-            const kd = `\`${stats[0].children[1].textContent} (${stats[0].children[2].children[0].textContent})\``
+            const kd = `\`${stats[1].children[1].textContent} (${stats[1].children[2].children[0].textContent})\``
             const wins = `\`${stats[2].children[1].textContent} (${stats[2].children[2].children[0].textContent})\``
-            const kills = `\`${stats[1].children[1].textContent} (${stats[1].children[2].children[0].textContent})\``
-            const deaths = `\`${stats[8].children[1].textContent} (${stats[8].children[2].children[0].textContent})\``
+            const kills = `\`${stats[5].children[1].textContent} (${stats[5].children[2].children[0].textContent})\``
+            const deaths = `\`${stats[6].children[1].textContent} (${stats[6].children[2].children[0].textContent})\``
 
             msg.channel.send(
+                //@ts-ignore
                 tracker.presetEmbed(member, 'cold-war', user, link)
                     .addFields(
                         [
