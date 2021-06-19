@@ -1,4 +1,4 @@
-const { Message, Client, MessageEmbed } = require('discord.js')
+const { Message, Client, GuildMember } = require('discord.js')
 const axios = require('axios').default
 const jsdom = require("jsdom")
 const { db, tracker, embed } = require('../../utility')
@@ -53,6 +53,7 @@ const getUserInfo = async (member, msg) => {
             // console.log()
             // console.log(plunder)
 
+            //@ts-ignore
             const emb = tracker.presetEmbed(member, 'warzone', user, link)
 
 
