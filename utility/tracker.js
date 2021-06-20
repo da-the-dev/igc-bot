@@ -251,7 +251,7 @@ const resetRoles = async (game, member) => {
 
 
 module.exports.profileErrors = (err, msg) => {
-    console.log(err)
+    // console.log(err)
     if(err.response && err.response.status == '404')
         embed.error(msg, 'Ошибка, профиль не найден!')
 }
