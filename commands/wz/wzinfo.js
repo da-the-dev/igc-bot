@@ -23,10 +23,16 @@ const getUserInfo = async (member, msg) => {
             const dom = new jsdom.JSDOM(websiteString)
 
             const stats = dom.window.document.getElementsByClassName('main')
-
+            console.log(...stats)
             var battle, battleString, plunder, plunderString
             try {
-                battle = Array.from(stats[1].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+                battle = Array.from(stats[1].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => {
+                    try {
+                        return [el[0].textContent, el[1].textContent, el[2].children[0].textContent]
+                    } catch {
+                        return null
+                    }
+                })
                 battleString =
                     `> ${e.lvl} Уровень: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[0].textContent.replace('Level ', '')}\`\n` +
                     `> ${e.prestige} Престиж: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\`\n` +
@@ -41,14 +47,20 @@ const getUserInfo = async (member, msg) => {
             } catch(err) { console.log('No battle data!') }
 
             try {
-                plunder = Array.from(stats[2].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => [el[0].textContent, el[1].textContent, el[2].children[0].textContent])
+                plunder = Array.from(stats[2].children).map(el => el.children[0].children[1]).map(el => el.children).map(el => {
+                    try {
+                        return [el[0].textContent, el[1].textContent, el[2].children[0].textContent]
+                    } catch {
+                        return null
+                    }
+                })
                 plunderString =
                     `> ${e.kills} Убийства: \`${plunder[1][1]} (${plunder[1][2]})\`\n` +
                     `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[2].textContent.trim().replace(' Matches', '')}\`\n` +
                     `> ${e.kd} K/D: \`${plunder[3][1]} (${plunder[3][2]})\`\n` +
                     `> ${e.deaths} Смертей: \`${plunder[2][1]} (${plunder[2][2]})\`\n` +
                     `> ${e.top1} Победы %: \`${plunder[11][1]} (${plunder[11][2]})\``
-            } catch(err) { console.log('No plunder data!') }
+            } catch(err) { console.log('No plunder data!'); console.log(err) }
             // console.log(battle)
             // console.log()
             // console.log(plunder)
