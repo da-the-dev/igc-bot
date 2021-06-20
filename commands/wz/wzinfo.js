@@ -90,7 +90,7 @@ const getUserInfo = async (member, msg) => {
             }
         })
         .catch(err => {
-            tracker.profileErrors(err)
+            tracker.profileErrors(err, msg)
         })
 
 }
