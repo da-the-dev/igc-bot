@@ -38,12 +38,12 @@ const getUserInfo = async (member, msg) => {
                     `> ${e.prestige} Престиж: \`${dom.window.document.getElementsByClassName('highlighted-stat')[0].children[1].children[1].textContent.trim().replace('Prestige ', '')}\`\n` +
                     `> ${e.kd} K/D: \`${battle[6][1]} (${battle[6][2]})\`\n` +
                     `> ${e.kills} Убийства: \`${battle[4][1]} (${battle[4][2]})\`\n` +
-                    `> ${e.kills} Смерти: \`${battle[5][1]} (${battle[5][2]})\`\n` +
+                    `> ${e.deaths} Смерти: \`${battle[5][1]} (${battle[5][2]})\`\n` +
                     `> ${e.match} Матчей: \`${dom.window.document.getElementsByClassName('matches')[1].textContent.trim().replace(' Matches', '')}\`\n` +
-                    `> ${e.kills} Победы: \`${battle[0][1]} (${battle[0][2]})\`\n` +
-                    `> ${e.kills} Топ 5: \`${battle[1][1]} (${battle[1][2]})\`\n` +
-                    `> ${e.kills} Топ 10: \`${battle[2][1]} (${battle[2][2]})\`\n` +
-                    `> ${e.kills} Топ 25: \`${battle[3][1]} (${battle[3][2]})\`\n`
+                    `> ${e.top1} Победы: \`${battle[0][1]} (${battle[0][2]})\`\n` +
+                    `> ${e.top5} Топ 5: \`${battle[1][1]} (${battle[1][2]})\`\n` +
+                    `> ${e.top10} Топ 10: \`${battle[2][1]} (${battle[2][2]})\`\n` +
+                    `> ${e.top25} Топ 25: \`${battle[3][1]} (${battle[3][2]})\`\n`
             } catch(err) { console.log('No battle data!') }
 
             try {
