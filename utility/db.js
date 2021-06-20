@@ -1,3 +1,4 @@
+// @ts-nocheck
 require('dotenv').config()
 
 const MongoClient = require('mongodb').MongoClient
@@ -56,7 +57,7 @@ class Connection {
     /**
      * Gets data from a guild by some query
      * @param {string} guildID - Guild ID
-     * @param {string} query - CustomQuery
+     * @param {any} query - CustomQuery
      * @return {Promise<any>} Info about the key
      */
     qget(guildID, query) {
