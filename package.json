@@ -11,11 +11,16 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "babel-eslint": "^10.1.0",
     "discord-buttons": "^3.2.1",
     "discord.js": "^12.5.3",
     "discordjs-activity": "^1.1.0",
     "dotenv": "^10.0.0",
     "jsdom": "^16.6.0",
     "mongoose": "^5.12.12"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-plugin-jsdoc": "^35.4.0"
   }
 }

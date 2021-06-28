@@ -2,11 +2,12 @@ const { Connection } = require('./db')
 
 /**
  * Starts a few connections
+ *
  * @param {number} amount 
  */
 module.exports.startconnections = async (amount) => {
     var connectionPromises = []
-    for(i = 0; i < amount; i++)
+    for(let i = 0; i < amount; i++)
         connectionPromises.push(new Connection())
 
     await Promise.all(connectionPromises)
