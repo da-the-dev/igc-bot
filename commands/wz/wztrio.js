@@ -4,11 +4,11 @@ const WZLobby = require('../../classes/lobbies/WZLobby')
 
 module.exports =
     /**
-    * @param {Array<string>} args Command argument
-    * @param {Message} msg Discord message object
-    * @param {Client} client Discord client object
-    * @description Usage: .wztrio <?kd>
-    */
+     * @param {Array<string>} args Command argument
+     * @param {Message} msg Discord message object
+     * @param {Client} client Discord client object
+     * @description Usage: .wztrio <?kd>
+     */
     async (args, msg, client) => {
         const kd = Number(args[0])
         if(!WZLobby.kdCheck(args[0])) {

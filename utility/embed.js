@@ -2,6 +2,7 @@ const { Message, MessageEmbed } = require('discord.js')
 
 /**
  * Creates a default message with author 
+ *
  * @param {Message} msg 
  * @returns 
  */
@@ -12,8 +13,10 @@ const standard = (msg) => {
 
 /**
  * OK reply
+ *
  * @param {Message} msg 
- * @param {tring} content 
+ * @param {string} content 
+ * @param {boolean} [send]
  * @returns {Promise<Message>|MessageEmbed}
  */
 module.exports.ok = (msg, content, send = true) => {
@@ -28,8 +31,10 @@ module.exports.ok = (msg, content, send = true) => {
 
 /**
  * Warning reply
+ *
  * @param {Message} msg
- * @param {tring} content
+ * @param {string} content
+ * @param {boolean} [send]
  * @returns {MessageEmbed|Message}
  */
 module.exports.warning = (msg, content, send = true) => {
@@ -44,8 +49,10 @@ module.exports.warning = (msg, content, send = true) => {
 
 /**
  * Error reply
+ *
  * @param {Message} msg
- * @param {tring} content
+ * @param {string} content
+ * @param {boolean} [send]
  * @returns {MessageEmbed|Message}
  */
 module.exports.error = (msg, content, send = true) => {

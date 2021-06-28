@@ -1,3 +1,4 @@
+/* eslint-disable */
 require('dotenv').config()
 
 const MongoClient = require('mongodb').MongoClient
@@ -17,7 +18,7 @@ class Connection {
      * @returns {Promise<Connection>}
      */
     constructor() {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             this.#connection = await new MongoClient(process.env.MURL, { useNewUrlParser: true, useUnifiedTopology: true }).connect()
             connections.push(this)
             resolve(this)
@@ -36,7 +37,7 @@ class Connection {
      * Gets data about a key from a guild
      * @param {string} guildID - Guild ID
      * @param {string} uniqueID - Unique ID
-     * @return {Promise<any>} Info about the key
+     * @returns {Promise<any>} Info about the key
      */
     get(guildID, uniqueID) {
         return new Promise(async (resolve, reject) => {
@@ -57,7 +58,7 @@ class Connection {
      * Gets data from a guild by some query
      * @param {string} guildID - Guild ID
      * @param {string} query - CustomQuery
-     * @return {Promise<any>} Info about the key
+     * @returns {Promise<any>} Info about the key
      */
     qget(guildID, query) {
         return new Promise(async (resolve, reject) => {
@@ -126,7 +127,7 @@ class Connection {
      * Gets data about many keys from a guild
      * @param {string} guildID - Guild ID
      * @param {object} query - Query to use as a filter
-     * @return {Promise<Array<any>>} Info about the keys
+     * @returns {Promise<Array<any>>} Info about the keys
      */
     getMany(guildID, query) {
         return new Promise((resolve, reject) => {
@@ -141,7 +142,7 @@ class Connection {
      * @param {string} guildID - Guild ID
      * @param {object} filter - Query to use as a filter
      * @param {object} update - Query to update documents with
-     * @return {Promise<any>} Info about the keys
+     * @returns {Promise<any>} Info about the keys
      */
     updateMany(guildID, filter, update) {
         return new Promise((resolve, reject) => {
@@ -158,7 +159,7 @@ class Connection {
      * Deletes a document
      * @param {string} guildID - Guild ID
      * @param {string} uniqueID - Unique ID
-     * @return {Promise<string>} 'OK' if deleted succesfully 
+     * @returns {Promise<string>} 'OK' if deleted succesfully 
      */
     delete(guildID, uniqueID) {
         return new Promise((resolve, reject) => {
@@ -174,7 +175,7 @@ class Connection {
      * Deletes many document
      * @param {string} guildID - Guild ID
      * @param {obj} query - Query to use a filter
-     * @return {Promise<string>} 'OK' if deleted succesfully 
+     * @returns {Promise<string>} 'OK' if deleted succesfully 
      */
     deleteMany(guildID, query) {
         return new Promise((resolve, reject) => {
@@ -198,11 +199,11 @@ class DBUser {
     /**@type {PlatformLink} Cold war platform data*/ cw
 
     /**
-    * Retrieves data about a user
-    * @param {string} guildID
-    * @param {string} id
-    * @return {Promise<DBUser>}
-    */
+     * Retrieves data about a user
+     * @param {string} guildID
+     * @param {string} id
+     * @returns {Promise<DBUser>}
+     */
     constructor(guildID, id) {
         return new Promise(async (resolve, reject) => {
             this.#guildID = guildID

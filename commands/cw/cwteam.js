@@ -4,11 +4,11 @@ const CWLobby = require('../../classes/lobbies/CWLobby')
 
 module.exports =
     /**
-    * @param {Array<string>} args Command argument
-    * @param {Message} msg Discord message object
-    * @param {Client} client Discord client object
-    * @description Usage: .cwteam <?kd>
-    */
+     * @param {Array<string>} args Command argument
+     * @param {Message} msg Discord message object
+     * @param {Client} client Discord client object
+     * @description Usage: .cwteam <?kd>
+     */
     async (args, msg, client) => {
         const kd = Number(args[0])
         if(!CWLobby.kdCheck(args[0])) {

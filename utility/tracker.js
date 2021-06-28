@@ -8,6 +8,7 @@ const platforms = 'Поддерживаемые платформы:\n\nº**Battl
 
 /**
  * Returns game's pretty name and code
+ *
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @returns
  */
@@ -20,6 +21,7 @@ module.exports.gameDecoder = game => {
 
 /**
  * Returns game's link remainder
+ *
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @returns
  */
@@ -37,6 +39,7 @@ module.exports.linkRemainder = linkRemainder
 
 /**
  * Register user game profile in database
+ *
  * @param {Message} msg
  * @param {string[]} args 
  * @param {'warzone'|'modern-warfare'|'cold-war'} game 
@@ -65,23 +68,18 @@ module.exports.reg =
             return
         }
 
-        var link = ''
         var linkPlatform = ''
         switch(platform) {
             case 'battle':
-                link = `https://cod.tracker.gg/${game}/profile/battlenet/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'battlenet'
                 break
             case 'activ':
-                link = `https://cod.tracker.gg/${game}/profile/atvi/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'atvi'
                 break
             case 'ps':
-                link = `https://cod.tracker.gg/${game}/profile/psn/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'psn'
                 break
             case 'xbox':
-                link = `https://cod.tracker.gg/${game}/profile/xbl/${usertag.replace('#', '%23')}/${linkRemainder(game)}`
                 linkPlatform = 'xbl'
                 break
             default:
@@ -90,7 +88,7 @@ module.exports.reg =
         }
 
         axios.get(`https://cod.tracker.gg/${game}/profile/${linkPlatform}/${usertag.replace('#', '%23')}/${linkRemainder}`)
-            .then(async response => {
+            .then(async () => {
                 if(!msg.member.roles.cache.get(constants.roles[code]))
                     msg.member.roles.add(constants.roles[code])
 
@@ -129,10 +127,12 @@ module.exports.clear = async (msg, game) => {
 
 /**
  * Register user game profile in database
+ *
  * @param {GuildMember} member
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @param {DBUser} user
  * @param {string} link
+ * @returns
  */
 module.exports.presetEmbed = (member, game, user, link) => {
     const dg = this.gameDecoder(game)
@@ -140,7 +140,7 @@ module.exports.presetEmbed = (member, game, user, link) => {
     // Selecting platform
     var platform = ''
     switch(user[dg.code].platform) {
-        case "battle":
+        case 'battle':
             platform = 'Battle.net'
             break
         case 'atvi':
@@ -170,9 +170,9 @@ module.exports.presetEmbed = (member, game, user, link) => {
 
     // Cooking an embed
     return new MessageEmbed({
-        "title": `Обновление статистики ${dg.prettyName}`,
-        "description": `${e.info} Ник: ${member.user} | ${platform}: [** ${user[dg.code].usertag}**](${link})`,
-        "color": 9109759
+        'title': `Обновление статистики ${dg.prettyName}`,
+        'description': `${e.info} Ник: ${member.user} | ${platform}: [** ${user[dg.code].usertag}**](${link})`,
+        'color': 9109759
     })
         .setAuthor(member.user.tag, member.user.displayAvatarURL({ dynamic: true }))
         .setFooter('support@imperialgameclub.ru\n©2020 - 2021 Imperial Game Club', member.client.user.displayAvatarURL({ dynamic: true }))
@@ -182,6 +182,7 @@ module.exports.presetEmbed = (member, game, user, link) => {
 
 /**
  * Give K/D roles for users
+ *
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @param {GuildMember} member
  * @param {number} kd
@@ -222,6 +223,7 @@ module.exports.kdRoles = async (game, member, kd) => {
 
 /**
  * Take game roles from user
+ *
  * @param {'warzone'|'modern-warfare'|'cold-war'} game
  * @param {GuildMember} member
  */
@@ -250,7 +252,7 @@ const resetRoles = async (game, member) => {
 }
 
 
-module.exports.profileErrors = err => {
+module.exports.profileErrors = (msg, err) => {
     console.log(err)
     if(err.response && err.response.status == '404')
         embed.error(msg, 'Ошибка, профиль не найден!')

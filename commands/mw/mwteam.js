@@ -4,11 +4,11 @@ const MWLobby = require('../../classes/lobbies/MWLobby')
 
 module.exports =
     /**
-    * @param {Array<string>} args Command argument
-    * @param {Message} msg Discord message object
-    * @param {Client} client Discord client object
-    * @description Usage: .mwteam <?kd>
-    */
+     * @param {Array<string>} args Command argument
+     * @param {Message} msg Discord message object
+     * @param {Client} client Discord client object
+     * @description Usage: .mwteam <?kd>
+     */
     async (args, msg, client) => {
         const kd = Number(args[0])
         if(!MWLobby.kdCheck(args[0])) {

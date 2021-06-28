@@ -3,12 +3,11 @@ require('dotenv').config()
 const Discord = require('discord.js')
 const fs = require('fs')
 const utl = require('./utility')
-const constants = require('./constants.json')
 
 // Client
-const prefix = "!"
+const prefix = '!'
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
-require("discordjs-activity")(client)
+require('discordjs-activity')(client)
 require('discord-buttons')(client)
 client.prefix = prefix
 
@@ -19,20 +18,20 @@ client.prefix = prefix
  * @returns {string[]}
  */
 function walk(dir) {
-    var results = [];
-    var list = fs.readdirSync(dir);
+    var results = []
+    var list = fs.readdirSync(dir)
     list.forEach(function(file) {
-        file = dir + '/' + file;
-        var stat = fs.statSync(file);
+        file = dir + '/' + file
+        var stat = fs.statSync(file)
         if(stat && stat.isDirectory()) {
             /* Recurse into a subdirectory */
-            results = results.concat(walk(file));
+            results = results.concat(walk(file))
         } else {
             /* Is a file */
-            results.push(file);
+            results.push(file)
         }
-    });
-    return results;
+    })
+    return results
 }
 
 var commandNames = walk('./commands').filter(c => c.endsWith('.js') && !c.includes('utility.js'))
@@ -49,38 +48,38 @@ commandNames.forEach(c => {
     )
 })
 
-process.stdin.resume();
+process.stdin.resume()
 function exitHandler(options, exitCode) {
     if(options.cleanup) {
         utl.connections.closeConnections(); console.log('ded')
     }
-    if(exitCode || exitCode === 0) console.log(exitCode);
-    if(options.exit) process.exit();
+    if(exitCode || exitCode === 0) console.log(exitCode)
+    if(options.exit) process.exit()
 }
-process.on('exit', exitHandler.bind(null, { cleanup: true }));
-process.on('res', exitHandler.bind(null, { cleanup: true }));
-process.on('SIGINT', exitHandler.bind(null, { exit: true }));
-process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
-process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+process.on('exit', exitHandler.bind(null, { cleanup: true }))
+process.on('res', exitHandler.bind(null, { cleanup: true }))
+process.on('SIGINT', exitHandler.bind(null, { exit: true }))
+process.on('SIGUSR1', exitHandler.bind(null, { exit: true }))
+process.on('SIGUSR2', exitHandler.bind(null, { exit: true }))
 process.on('uncaughtException', err => {
     exitHandler.bind(null, { exit: true })
     lastMessages = lastMessages.reverse()
     utl.errorReporter(lastMessages.find(m => !m.deleted), err)
     lastMessages = lastMessages.reverse()
     console.log(err)
-});
+})
 process.on('unhandledRejection', err => {
     lastMessages = lastMessages.reverse()
     utl.errorReporter(lastMessages.find(m => !m.deleted), err)
     lastMessages = lastMessages.reverse()
     console.log(err)
-});
+})
 
 
 client.login(process.env.BOTTOKEN)
 client.once('ready', async () => {
     await utl.connections.startconnections(3)
-    console.log("[BOT] BOT is online")
+    console.log('[BOT] BOT is online')
     client.guild = client.guilds.cache.get('353929650734628874')
     if(client.guild)
         utl.lobbiesManager.sweeper(client.guild)
@@ -100,7 +99,7 @@ client.on('message', msg => {
     // Bot commands
     if(!msg.author.bot) {
         if(msg.content[0] == prefix) {
-            var args = msg.content.slice(1).split(" ")
+            var args = msg.content.slice(1).split(' ')
             args.forEach(a => a.trim())
             const command = args.shift()
 

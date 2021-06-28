@@ -1,9 +1,9 @@
-const { VoiceState, Guild, CategoryChannel } = require('discord.js')
+const { VoiceState, Guild } = require('discord.js')
 const constants = require('../constants.json')
-const { embed } = require('../utility')
 
 /**
  * Deletes empty rooms 
+ *
  * @param {VoiceState} oldState 
  * @param {VoiceState} newState 
  */
@@ -22,6 +22,7 @@ module.exports.delete = (oldState, newState) => {
 
 /**
  * Deletes empty rooms every minute
+ *
  * @param {Guild} guild
  */
 module.exports.sweeper = guild => {

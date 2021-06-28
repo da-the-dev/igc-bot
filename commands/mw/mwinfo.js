@@ -1,6 +1,6 @@
-const { Message, Client, GuildMember, Guild } = require('discord.js')
+const { Message, Client, GuildMember } = require('discord.js')
 const axios = require('axios').default
-const jsdom = require("jsdom")
+const jsdom = require('jsdom')
 const { db, tracker, embed } = require('../../utility')
 const { DBUser } = db
 const constants = require('../../constants.json')
@@ -8,7 +8,9 @@ const { e } = constants
 
 /**
  * Get user info
+ *
  * @param {GuildMember} member 
+ * @param {Message} msg
  */
 const getUserInfo = async (member, msg) => {
     const user = await new DBUser(member.guild.id, member.id)
@@ -39,8 +41,8 @@ const getUserInfo = async (member, msg) => {
                     .addFields(
                         [
                             {
-                                "name": "**Общее**",
-                                "value": `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.top1} Победы: ${wins}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n`
+                                'name': '**Общее**',
+                                'value': `> ${e.lvl} Уровень: ${level}\n> ${e.prestige} Престиж: ${prestige}\n> ${e.kd} K/D: ${kd}\n> ${e.top1} Победы: ${wins}\n> ${e.kills} Убийства: ${kills}\n> ${e.deaths} Смерти: ${deaths}\n`
                             }
                         ]
                     )
@@ -50,17 +52,17 @@ const getUserInfo = async (member, msg) => {
             tracker.kdRoles('modern-warfare', member, numKD)
         })
         .catch(err => {
-            tracker.profileErrors(err)
+            tracker.profileErrors(msg, err)
         })
 }
 
 module.exports =
     /**
-    * @param {Array<string>} args Command argument
-    * @param {Message} msg Discord message object
-    * @param {Client} client Discord client object
-    * @description Usage: .mwinfo
-    */
+     * @param {Array<string>} args Command argument
+     * @param {Message} msg Discord message object
+     * @param {Client} client Discord client object
+     * @description Usage: .mwinfo
+     */
     async (args, msg, client) => {
         const mMember = msg.mentions.members.first()
         if(mMember)
